@@ -8,6 +8,8 @@
 - [vue 异步组件](#异步组件)
 - [vue 组件注册](#组件注册)
 - [vue 插槽](#vue插槽)
+- [vue 过滤器](#vue过滤器)
+- [vue created中获取dom](#vuecreated中获取dom)
 
 
 
@@ -65,3 +67,14 @@ export default {
 ```
 ## vue插槽
 `<slot></slot>`
+
+## vue过滤器
+项目中所有有关价格部分需要做一个处理
+标准，整数价格只展示整数部分，带有小数的价格保留两位小数。
+实现方法：利用vue中的过滤器（filter）  
+[vue过滤器部分参考文档](https://cn.vuejs.org/v2/guide/filters.html)
+Number.isInteger() 方法用来判断给定的参数是否为整数。  
+toFixed() 方法可把 Number 四舍五入为指定小数位数的数字。
+## vue created中获取dom
+在this.$nextTick(()=>{});
+
