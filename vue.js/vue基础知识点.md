@@ -10,7 +10,7 @@
 - [vue 插槽](#vue插槽)
 - [vue 过滤器](#vue过滤器)
 - [vue created中获取dom](#vuecreated中获取dom)
-
+- [vue 父组件中如何调用子组件中的方法](#vue父组件中如何调用子组件中的方法)
 
 
 ## vue-cli 脚手架创建项目目录相关
@@ -77,4 +77,8 @@ Number.isInteger() 方法用来判断给定的参数是否为整数。
 toFixed() 方法可把 Number 四舍五入为指定小数位数的数字。
 ## vue created中获取dom
 在this.$nextTick(()=>{});
+## vue 父组件中如何调用子组件中的方法
+通过给子组件设置`ref`,然后在父组件中通过` this.$refs.refName.methodName()`的方式进行调用
+
+
 

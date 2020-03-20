@@ -40,6 +40,15 @@ clip | 修剪文本
 ellipsis | 显示省略号来表示被修剪的文本。  
 string | 使用给定的字符来代表被修剪的文本。
 
+### 单行文本显示超出一行隐藏
+语法：
+```css
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+```
+
 ### -webkit-line-clamp
 定义：限制在一个块元素显示的文本的行数。
 >-webkit-line-clamp 是一个 不规范的属性（unsupported WebKit property），它没有出现在 CSS 规范草案中。
