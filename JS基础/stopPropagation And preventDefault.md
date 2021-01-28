@@ -12,5 +12,7 @@
 
 ### 三、取消默认事件
 1.w3c的方法是e.preventDefault();  
-2.IE则是使用e.returnValue=false;  
+2.IE则是使用e.returnValue=false;   
+
+
 
