@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+</head>
+
+<body>
+    <script src="../node_modules/vconsole/dist/vconsole.min.js"></script>
+    <script>
+        var vConsole = new VConsole();
+        // window.addEventListener('devicemotion', function (event) {
+        //     console.log(event.acceleration.x + ' m/s2');
+        // });
+    </script>
+    <script>
+        // 判断是否是 ios 设备    
+        function getIos(){
+            var u = window.navigator.userAgent;
+            return !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+        }    
+        /*
+            setDeviceMotion 添加陀螺仪监控
+                cb devicemotion的事件处理函数
+                errCb 不支持 devicemotion 时的处理回调
+        */    
+        function setDeviceMotion(cb,errCb){
+            if(!window.DeviceMotionEvent){
+                    errCb("设备不支持DeviceMotion"); 
+                return;
+            }
+            if (typeof DeviceMotionEvent.requestPermission === 'function') {
+                // IOS 13
+                DeviceMotionEvent.requestPermission()
+                    .then(permissionState => {
+                        if (permissionState === 'granted') {
+                            window.addEventListener('devicemotion',cb);
+                        }else{
+                            errCb(permissionState);
+                        }
+                    })
+                    .catch((err)=>{
+                        errCb("用户未允许权限");
+                    });
+            } else {
+                // 其他支持加速度检测的系统
+                let timer = setTimeout(function(){
+                    errCb("用户未开启权限");
+                },1000);
+                window.addEventListener("devicemotion",(e)=>{
+                    clearTimeout(timer);
+                },{once:true});
+                window.addEventListener("devicemotion",cb);
+            }
+        }
+        document.onclick=function(){
+            setDeviceMotion((e)=>{
+                let motion = e.acceleration;
+                let {x,y,z} = motion;
+                if(!getIos()){
+                    x = -x;
+                    y = -y;
+                    z = -z;
+                } 
+            },(errMessage)=>{
+                alert(errMessage);
+            }); // 最后这里一定要注意，在IOS 13.3中必须通过用户操作去获取该权限
+        }
+    </script>
+    
+</body>
+
+</html>

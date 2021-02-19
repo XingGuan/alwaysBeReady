@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+</head>
+
+<body>
+    <button id="btn">开启摇一摇</button>
+    <button id="stopBtn">关闭摇一摇</button>
+    <div id="info"></div>
+    <script src="motion.js"></script>
+    <script>
+        let btn = document.querySelector("#btn");
+        let stopBtn = document.querySelector("#stopBtn");
+
+        function throttle(fn, deley = 200, start = true) {
+            let timer = 0;
+            return function (...arg) { // 经过防抖处理的函数
+                const _this = this;
+                if (timer) {
+                    return;
+                }
+                start && fn.apply(_this, arg);
+                timer = setTimeout(() => {
+                    (!start) && fn.apply(_this, arg);
+                    timer = 0;
+                }, deley);
+            }
+         }
+        /*
+             setShake 摇一摇
+               ops : {
+                 start:fn // 开始摇一摇时要做的事情
+                 shake:fn // 摇一摇中要做得事情
+                 end: fn// 摇一摇结束后要做的事情
+               }
+            */
+        function setShake(ops) {
+            const {
+                start = () => {}, shake = () => {}, end = () => {}
+            } = ops;
+            let lastX = 0,
+                lastY = 0,
+                lastZ = 0;
+            const maxRange = 50;
+            const minRange = 5;
+            let isShake = false;
+            console.log('9999999')
+            const unMotion = setMotion(throttle((e) => {
+                const {
+                    x,
+                    y,
+                    z
+                } = e.acceleration;
+                const range = Math.abs(x - lastX) + Math.abs(y - lastY) + Math.abs(z - lastZ);
+                if (range > maxRange && (!isShake)) {
+                    start(e);
+                    isShake = true;
+                } else if (range > maxRange && isShake) {
+                    shake(e);
+                } else if (range < minRange && isShake) {
+                    end(e);
+                    isShake = false;
+                }
+                lastX = x;
+                lastY = y;
+                lastZ = z;
+            }));
+            return unMotion; //取消摇一摇监听
+        }
+        let unShake;
+        btn.addEventListener("touchend", () => {
+            unShake = setShake({
+                start: () => {
+                    info.innerHTML += "开始摇一摇<br/>";
+                },
+                shake: () => {
+                    info.innerHTML += "摇一摇中<br/>";
+                },
+                end: () => {
+                    info.innerHTML += "摇一摇结束<br/>";
+                }
+            })
+        });
+        stopBtn.addEventListener("touchend", () => {
+            if (unShake) {
+                unShake();
+            }
+        })
+    </script>
+</body>
+
+</html>
