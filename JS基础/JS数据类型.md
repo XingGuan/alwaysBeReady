@@ -106,11 +106,11 @@ console.log(
 );
 //所有结果均为true
 ```  
-<font color='red'>注：除了undefined和null之外，其他类型都可以通过constructor属性来判断类型，undefined和null没有constructor属性</font>,会提示`Error in created hook: "TypeError: Cannot read property 'constructor' of undefined"`
+><font color='red'>注：除了undefined和null之外，其他类型都可以通过constructor属性来判断类型，undefined和null没有constructor属性</font>,会提示`Error in created hook: "TypeError: Cannot read property 'constructor' of undefined"
 ### 4.Object.prototype上的toString()
 语法：`Object.prototype.toString.call(arr);`  
 返回结果举例:`[object Number]`这里要注意大小写  
-toString()方法返回一个表示该对象的字符串
+toString()方法返回一个表示该对象的字符串  
 [使用Object.prototype.toString.call()检查类型的原因](https://www.jianshu.com/p/e4237ebb1cf0)
 [参考文档](https://www.cnblogs.com/bq-med/p/8796836.html)
 
