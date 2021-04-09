@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <link href="./swiper-bundle.min.css" rel="stylesheet">
+    <style>
+        html {
+            width: 100vw;
+            font-size: 0.133vw;
+        }
+
+        body {
+            margin: 0;
+        }
+
+        .swiper-container {
+            width: 750rem;
+            height: 390rem;
+            /* background-color: rgba(0, 0, 0, 0.5); */
+        }
+
+        .imgDisplay {
+            width: 690rem;
+            height: 390rem;
+            border-radius: 4rem;
+        }
+
+        .swiper-slide {
+            /* width: 500px; */
+            /*设为固定值*/
+            /* width: auto; */
+            /*根据内容调整宽度*/
+            /* width:auto; */
+            width: 690rem;
+            border-radius: 4rem;
+        }
+
+        .swiper-button-next:after,
+        .swiper-container-rtl .swiper-button-prev:after {
+            content: '';
+        }
+
+        .swiper-button-prev:after,
+        .swiper-container-rtl .swiper-button-next:after {
+            content: '';
+        }
+        .swiper-pagination .swiper-pagination-bullet{
+            background-color: cornsilk;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <img src="./swiperDisplay.png" class="imgDisplay">
+            </div>
+            <div class="swiper-slide">
+                <img src="./swiperDisplay.png" class="imgDisplay">
+            </div>
+            <div class="swiper-slide">
+                <img src="./swiperDisplay.png" class="imgDisplay">
+            </div>
+        </div>
+        <!-- 如果需要分页器 -->
+        <div class="swiper-pagination"></div>
+
+        <!-- 如果需要导航按钮 -->
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+
+        <!-- 如果需要滚动条 -->
+        <div class="swiper-scrollbar"></div>
+    </div>
+    <script src="./swiper-bundle.min.js"></script>
+    <script>
+        var mySwiper = new Swiper('.swiper-container', {
+            loop: true, // 循环模式选项
+            direction: 'horizontal',
+            grabCursor: true,
+            autoplay: true,
+            spaceBetween: 5,
+            slidesPerView: 'auto',
+            slidesOffsetBefore: 15,
+            pagination: {
+                el: '.swiper-pagination',
+            },
+            // slidesOffsetAfter : 100,
+            // centeredSlides : true,
+            // slidesPerView : 2,  
+            // slidesPerGroup: 3,
+        })
+    </script>
+</body>
+
+</html>
