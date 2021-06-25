@@ -3,7 +3,7 @@
 [Vue 项目使用WebSocket Demo](https://www.jianshu.com/p/9d8b2e42328c)  
 
 [Websocket定时推送消息到浏览器端华为云社区](https://www.huaweicloud.com/articles/42a2a28f1d3a227550a277243cd53df8.html)   
-
+   
 ### WebSocket教程
 WebSocket是一种网络通信协议,很多高级功能都需要它。
 #### 一、为什么需要WebSocket?    
