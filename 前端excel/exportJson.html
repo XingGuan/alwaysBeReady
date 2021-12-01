@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>export-json</title>
+    <style>
+        .exports {
+            width: 100px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            border-radius: 4px;
+            color: #fff;
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="exports" onclick="ext()">导出文件</div>
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <script>
+        var jsonStr = [{ //数据源
+            "姓名": "路人甲",
+            "电话": "123456789",
+            "邮箱": "000@123456.com"
+        }, {
+            "姓名": "炮灰乙",
+            "电话": "123456789",
+            "邮箱": "000@123456.com"
+        }, {
+            "姓名": "土匪丙",
+            "电话": "123456789",
+            "邮箱": "000@123456.com"
+        }, {
+            "姓名": "流氓丁",
+            "电话": "123456789",
+            "邮箱": "000@123456.com"
+        }]
+        function ext() {
+            //转换方法 json => sheet
+            var sheetData = XLSX.utils.json_to_sheet(jsonStr); //中间对象
+            console.log('mySheet', sheetData);
+
+            var workBook = {
+                SheetNames: ['mySheet'],
+                Sheets:{
+                    mySheet:Object.assign(
+                    {},
+                    sheetData,
+                    {
+                        '!merges': [{
+                            s: { // s开始
+                                c: 1, // 开始列
+                                r: 0  // 开始行
+                            },
+                            e: { // e结束
+                                c: 2, // 结束列
+                                r: 1   // 结束行
+                            }
+                        }]
+                    }
+                ),
+                Props: {}
+            } 
+            };
+
+            // 组成配置输出
+            var workBookOutPotion = {
+                //bookType 工作簿类型
+                bookType: 'xlsx',
+                //bookSST 生成共享字符串表
+                bookSST: false,
+                //type 输出数据编码
+                type: 'array'// ["base64", "binary", "string", "buffer", "file"]
+            };
+
+            //生成工作簿输出，数据为2进制
+
+            //第一种
+            // var workBookOut = XLSX.write(workBook, workBookOutPotion);
+            // //第二种 自动识别文件名，其余操作自动完成
+            XLSX.writeFile(workBook, 'SheetJSTableExport.xlsx');
+
+        }
+
+
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .exports {
+            width: 100px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            border-radius: 4px;
+            color: #fff;
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+
+<body>    
+    <div class="exports" onclick="exports()">导出文件</div>
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <script>
+        let headers = {
+            A1: { v: '2019年学生成绩表' },
+            A3: { v: '编号' },
+            B3: { v: '姓名' },
+            C3: { v: '年龄' },
+            D3: { v: '邮箱' }
+        }
+        let data = {
+            A4: { v: '100' },
+            B4: { v: '张三' },
+            C4: { v: '28' },
+            D4: { v: 'sanzhang@outlook.com' },
+            A5: { v: '200' },
+            B5: { v: '李四' },
+            C5: { v: '26' },
+            D5: { v: 'sili@sina.com' }
+        }
+        let fileName = '请假记录表.xlsx';
+        function exports() {
+            // 合并 headers 和 data
+            const output = Object.assign({}, headers, data);
+            console.log('output', output);
+            // 获取所有单元格的位置
+            const outputPos = Object.keys(output);
+            // 计算出范围 ,["A1",..., "H2"]
+            const ref = `${outputPos[0]}:${outputPos[outputPos.length - 1]}`;
+
+            // 构建 workbook 对象
+            const wb = {
+                SheetNames: ['mySheet1', 'mySheet2'],
+                Sheets: {
+                    mySheet1: Object.assign(
+                        {},
+                        output,
+                        {
+                            '!ref': ref,
+                            // 列宽度
+                            '!cols': [{ wpx: 65 }, { wpx: 100 }, { wpx: 200 }, { wpx: 80 }],
+                            // 合并单元格 0到1行，0到3列合并l
+                            '!merges': [
+                                {
+                                    s: { // s开始
+                                        r: 0  // 开始行
+                                    },
+                                    e: { // e结束
+                                        r: 6   // 结束行
+                                    }
+                                },
+                                {
+                                    s: { // s开始
+                                        c: 0, // 开始列
+                                        r: 0  // 开始行
+                                    },
+                                    e: { // e结束
+                                        c: 3, // 结束列
+                                        r: 1   // 结束行
+                                    }
+                                }]
+                        },
+                    ),
+                    mySheet2: Object.assign(
+                        {},
+                        output,
+                        {
+                            '!ref': ref,
+                            '!cols': [{ wpx: 65 }, { wpx: 100 }, { wpx: 200 }, { wpx: 80 }],
+                            // 合并单元格
+                            '!merges': [{
+                                s: { // s开始
+                                    c: 0, // 开始列
+                                    r: 0  // 开始行
+                                },
+                                e: { // e结束
+                                    c: 3, // 结束列
+                                    r: 1   // 结束行
+                                }
+                            }]
+                        },
+                    )
+                },
+            };
+
+            // 导出 Excel
+            XLSX.writeFile(wb, fileName);
+        }
+    </script>
+</body>
+
+</html>
