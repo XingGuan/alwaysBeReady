@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>手把手教你制作酷炫Web全景</title>
+    <meta name="viewport" id="viewport"
+        content="width=device-width,initial-scale=1,minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+</head>
+
+<body>
+    <div id="wrap"
+        style="position: absolute;z-index: 0;top: 0;bottom: 0;left: 0;right: 0;width: 100%;height: 100%;overflow: hidden;">
+    </div>
+    <script src="https://cdn.bootcdn.net/ajax/libs/three.js/r128/three.js"></script>
+    <script>
+        const width = window.innerWidth, height = window.innerHeight // 屏幕宽高
+        const radius = 50 // 球体半径
+
+        // 第一步：创建场景
+        const scene = new THREE.Scene()
+
+        // 第二步：绘制一个球体
+        const geometry = new THREE.SphereBufferGeometry(radius, 32, 32)
+        geometry.scale(-1, 1, 1) // 球面反转，由外表面改成内表面贴图
+        const material = new THREE.MeshBasicMaterial({
+            map: new THREE.TextureLoader().load('./attractions.jpg') // 上面的全景图片
+        })
+        const mesh = new THREE.Mesh(geometry, material)
+        scene.add(mesh)
+
+        // 第三步：创建相机，并确定相机位置
+        const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100)
+        camera.position.x = 0  // 确定相机位置移到球心
+        camera.position.y = 0
+        camera.position.z = 0
+
+        camera.target = new THREE.Vector3(radius, 0, 0) // 设置一个对焦点
+
+
+        // 第四步：拍照并绘制到canvas
+        const renderer = new THREE.WebGLRenderer()
+        renderer.setPixelRatio(window.devicePixelRatio)
+        renderer.setSize(width, height) // 设置照片大小
+
+        document.querySelector('#wrap').appendChild(renderer.domElement) // 绘制到canvas
+        renderer.render(scene, camera)
+
+        let lat = 0, lon = 0
+
+        function render() {
+            lon += 0.003 // 每帧加一个偏移量
+            // 改变相机的对焦点，计算公式参考：2.2.2章节
+            camera.target.x = radius * Math.cos(lat) * Math.cos(lon);
+            camera.target.y = radius * Math.sin(lat);
+            camera.target.z = radius * Math.cos(lat) * Math.sin(lon)
+            camera.lookAt(camera.target) // 对焦
+
+            renderer.render(scene, camera)
+            requestAnimationFrame(render)
+        }
+        render();
+        let lastX, lastY         // 上次屏幕位置
+        let curX, curY           // 当前屏幕位置
+        let startX, startY       // 开始触摸的位置，用于计算速度
+        let isMoving = false     // 是否停止单指操作
+        let speedX, speedY       // 速度
+        const factor = 1 / 10    // 灵敏系数，经验值
+        const deceleration = 0.1 // 减速度，惯性动画使用
+
+        const $wrap = document.querySelector('#wrap')
+        // 触摸开始
+        $wrap.addEventListener('touchstart', function (evt) {
+            const obj = evt.targetTouches[0] // 选择第一个触摸点
+            startX = lastX = obj.clientX
+            startY = lastY = obj.clientY
+            startTime = Date.now()
+            isMoving = true
+        })
+
+        // 触摸中
+        $wrap.addEventListener('touchmove', function (evt) {
+            evt.preventDefault()
+            const obj = evt.targetTouches[0]
+            curX = obj.clientX
+            curY = obj.clientY
+
+            // 参考：弧长公式
+            lon -= ((curX - lastX) / radius) * factor // factor为了全景旋转平稳，乘以一个系数
+            lat += ((curY - lastY) / radius) * factor
+
+            lastX = curX
+            lastY = curY
+        })
+
+        // 触摸结束
+        $wrap.addEventListener('touchend', function (evt) {
+            isMoving = false
+            var t = Date.now() - startTime
+            speedX = (curX - startX) / t    // X轴方向的平均速度
+            speedY = (curY - startY) / t    // Y轴方向的平均速度
+
+            subSpeedAnimate() // 惯性动画
+        })
+
+        let animateInt
+        // 减速度动画
+        function subSpeedAnimate() {
+            lon -= speedX * factor // X轴
+            lat += speedY * factor
+
+            // 减速度
+            speedX = subSpeed(speedX)
+            speedY = subSpeed(speedY)
+
+            // 速度为0或者有新的触摸事件，停止动画
+            if ((speedX === 0 && speedY === 0) || isMoving) {
+                if (animateInt) {
+                    cancelAnimationFrame(animateInt)
+                    animateInt = undefined
+                }
+            } else {
+                requestAnimationFrame(subSpeedAnimate)
+            }
+        }
+
+        // 减速度
+        function subSpeed(speed) {
+            if (speed !== 0) {
+                if (speed > 0) {
+                    speed -= deceleration;
+                    speed < 0 && (speed = 0);
+                } else {
+                    speed += deceleration;
+                    speed > 0 && (speed = 0);
+                }
+            }
+            return speed;
+        }
+    </script>
+</body>  
+
+</html>
