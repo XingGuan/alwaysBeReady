@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="IE=edge" >
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"/>
+<title>Aliplayer Online Settings</title>
+<link rel="stylesheet" href="https://g.alicdn.com/de/prismplayer/2.9.7/skins/default/aliplayer-min.css" />
+<script type="text/javascript" charset="utf-8" src="https://g.alicdn.com/de/prismplayer/2.9.7/aliplayer-min.js"></script>
+<style>
+    #player-con{width:100vw; height: 56vw;}
+</style>
+</head>
+<body>
+<div class="prism-player" id="player-con"></div>
+<script>
+var player = new Aliplayer({
+  "id": "player-con",
+  "source": "http://bp-resource.bestv.com.cn/material/8e9fd77cb864f2dd5e70d093a4bba368/2020/0729/video/e0c490e4cc054f399a20725ae72b631b.m3u8?auth_key=1627585526-155c471c897545c595963f4ba236b562-0-36d109e7c5c73dfd15dcb4825f2fa240",
+//   "width": "100%",
+//   "height": "500px",
+  "autoplay": true,
+  "isLive": false,
+  "rePlay": false,
+  "playsinline": true,
+  "preload": true,
+  "controlBarVisibility": "hover",
+  "useH5Prism": true
+}, function (player) {
+    console.log("The player is created");
+  }
+);
+</script>
+</body>
