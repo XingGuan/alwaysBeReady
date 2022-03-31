@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <title>1st Asia ERCP Webinar</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="css/mobile.css?v1=20160706151521566"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="css/style.css?v=20160706151521566"
+    />
+    <style>
+      #livePlayer {
+        height: 100%;
+      }
+
+      .imgbox-scroll {
+        /* overflow-y: scroll; */
+      }
+      #full-screen{
+        width:60px;
+        height: 30px;
+        border-right: 1px solid #ccc;
+        margin-right: 4px;
+      }
+      #openMuted{
+        width:60px;
+        height: 30px;
+        border-right: 1px solid #ccc;
+        margin-right: 4px;
+      }
+      #playBtn{
+        width:60px;
+        height: 30px;
+        border-right: 1px solid #ccc;
+        margin-right: 4px;
+      }
+      #hideBtn{
+        width:60px;
+        height: 30px;
+        border-right: 1px solid #ccc;
+        margin-right: 4px;
+      }
+
+            /* 抽奖2.0 */
+      .mobile .luckey-draw {
+        width: 100%;
+        height: 58%;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        z-index: 999999;
+        display: none;
+      }
+      .mobile .luckey-draw .luckey-drawdiv{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      .mobile .luckey-draw .luckey-drawing {
+        background: #fff url(https://static.csslcloud.net/img/lottery04.gif) center 1px no-repeat;
+        background-size: contain;
+        z-index: 999;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        display: none;
+      }
+      .mobile .luckey-draw .luckey-drawing-h3 {
+        box-shadow: 0px 3px 10px 0px rgba(181, 183, 190, 0.2),
+          inset 0px 1px 0px 0px #dddddd;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        font-size: 15px;
+        color: #38404b;
+      }
+      .mobile .luckey-draw .luckey-drawing-close {
+        background: url(https://static.csslcloud.net/img/icon-close.png) center no-repeat;
+        width: 30px;
+        height: 30px;
+        background-size: 47%;
+        position: absolute;
+        top: 5px;
+        right: 6px;
+        cursor: pointer;
+      }
+      /* 抽奖结果 */
+      .mobile .luckey-draw .luckey-draw-result{
+        background: #fff;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        border-radius: 4px;
+        position: absolute;
+        display: none;
+      }
+      .mobile .luckey-draw .tips-box {
+        display: none;
+        padding-bottom: 50px;
+        width: 300px;
+        background: #fff;
+        z-index: 1000001;
+        border-radius: 6px;
+        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      .mobile .luckey-draw .tips-box .tips-title {
+        width: 300px;
+        height: 40px;
+        text-align: center;
+        line-height: 40px;
+        border-bottom: 1px solid #ccc;
+      }
+      .mobile .luckey-draw .tips-box .tips-content {
+        width: 300px;
+        text-align: center;
+      }
+      .mobile .luckey-draw .tips-box .tips-content .tips-desc{
+        margin: 20px;
+      }
+      .mobile .luckey-draw .tips-box .tips-btn {
+        position: absolute;
+        right: 0px;
+        margin: auto;
+        left: 0px;
+        text-align: center;
+        outline: none;
+      }
+      .mobile .luckey-draw .tips-box .tips-btn .tips-submit {
+        background: #57b8f4;
+        color: #fff;
+        border: none;
+        font-size: 12px;
+        width: 55px;
+        height: 23px;
+        margin: 14px 8px 0 0;
+        border-radius: 2px;
+      }
+      .mobile .luckey-draw .tips-box .tips-btn .tips-cancel {
+        background: #fff;
+        border: 1px solid #ccc;
+        border-radius: 2px;
+        width: 55px;
+        height: 23px;
+        margin: 14px 8px 0 0;
+        color: #666;
+        font-size: 12px;
+      }
+      .mobile .luckey-draw button{
+        padding: 0;
+      }
+
+      .mobile .luckey-draw-result .luckey-draw-success{
+        display: none;
+        width: 120px;
+        height: 120px;
+        background: url(https://static.csslcloud.net/images/lottery-v2/success.png) no-repeat center;
+        background-size: contain;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+      }
+      .mobile .luckey-draw-result .luckey-draw-error{
+        display: none;
+        width: 120px;
+        height: 120px;
+        background: url(https://static.csslcloud.net/images/lottery-v2/error.png) no-repeat center;
+        background-size: contain;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+      }
+      .mobile .luckey-draw-result .luckey-draw-success p{
+        font-size: 13px;
+        color: #FFFFFF;
+        width: 100%;
+        height: 13px;
+        margin: 78px auto 0;
+        text-align: center;
+      }
+      .mobile .luckey-draw-result .luckey-draw-error p{
+        font-size: 13px;
+        color: #FFFFFF;
+        width: 95px;
+        height: 13px;
+        margin: 78px auto 0;
+        text-align: center;
+      }
+      .mobile .luckey-draw-result .luckey-draw-result-h3{
+        box-shadow: 0px 3px 10px 0px rgba(181, 183, 190, 0.2),
+          inset 0px 1px 0px 0px #dddddd;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        font-size: 15px;
+        color: #38404b;
+      }
+      .mobile .luckey-draw-result .luckey-draw-result-close {
+        background: url(https://static.csslcloud.net/img/icon-close.png) center no-repeat;
+        width: 30px;
+        height: 30px;
+        background-size: 47%;
+        position: absolute;
+        top: 5px;
+        right: 6px;
+        cursor: pointer;
+      }
+      .mobile .luckey-draw-result .luckey-draw-content{
+        width: 100%;
+        height: 100%;
+        overflow-y: scroll;
+      }
+      .mobile .luckey-draw-result .win-prize-tips{
+        margin: 46px 30px 20px 30px;
+        color: #333333;
+        font-size: 13px;
+        line-height: 23px;
+        text-align: center;
+      }
+      .mobile .luckey-draw-result .win-prize-tips span{
+        color: #FF412E;
+      }
+      .mobile .luckey-draw-result .win-prize-num {
+        font-family: Arial;
+        background: url(https://static.csslcloud.net/img/lottery03.png) center no-repeat;
+        width: 237px;
+        height: 117.5px;
+        background-size: contain;
+        font-size: 36px;
+        color: #ff412e;
+        text-indent: 30px;
+        line-height: 117.5px;
+        margin: 0 auto 15px;
+      }
+      .mobile .luckey-draw-result .cash-prize-tips{
+        color: #38404B;
+        font-size: 13px;
+        margin: 5px 40px 15px 40px;
+        text-align: center;
+      }
+      .mobile .luckey-draw-info li{
+        width: 330px;
+        margin: 0 auto 10px;
+      }
+      .mobile .luckey-draw-info label{
+        width: 56px;
+        display: inline-block;
+        margin-right: 5px;
+        text-align: right;
+        font-size: 12px;
+        color: #333333;
+      }
+      .mobile .luckey-draw-info input{
+        width: 243px;
+        height: 40px;
+        margin-bottom: 0px;
+        border-radius: 2px;
+        border: 1px solid #E5E5E5;
+        padding-left: 10px;
+      }
+      .mobile .luckey-draw-info .submit-msg-tips{
+        height: 12px;
+        text-align: center;
+        color: #FF412E;
+        font-size: 12px;
+        line-height: 12px;
+        margin-bottom: 10px;
+      }
+      .mobile .luckey-draw-info .luckey-draw-btn{
+        width: 180px;
+        height: 40px;
+        background-color: #3D96F5;
+        color: #FFFFFF;
+        font-size: 16px;
+        text-align: center;
+        line-height: 40px;
+        margin: 0 auto 15px;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+      .mobile .luckey-draw-result .win-prize-wrap{
+        width: 294px;
+        background-color: rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        margin: 0 auto 20px;
+        position: relative;
+      }
+      .mobile .luckey-draw-result .win-prize-min-height{
+        height: 32px;
+        overflow: hidden;
+      }
+      .mobile .win-prize-bottom{
+        width: 100%;
+        height: 15px;
+        margin-bottom: 50px;
+      }
+      .mobile .luckey-draw-result .winning-list-title{
+        width: 294px;
+        height: 32px;
+        line-height: 32px;
+        text-align: center;
+        color: #38404B;
+      }
+      .mobile .luckey-draw-result .winning-list-icon{
+        width: 10px;
+        height: 6px;
+        position: absolute;
+        top: 13px;
+        right: 107px;
+      }
+      .mobile .luckey-draw-result .down {
+        background: url(https://static.csslcloud.net/images/lottery-v2/down.png) no-repeat center;
+        background-size: contain;
+      }
+      .mobile .luckey-draw-result .up {
+        background: url(https://static.csslcloud.net/images/lottery-v2/up.png) no-repeat center;
+        background-size: contain;
+      }
+      .mobile .win-prize-wrap ul{
+        display: inline-block;
+      }
+      .mobile .win-prize-wrap li{
+        display: inline-block;
+        width: 50px;
+        margin-left: 20px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+      .mobile .win-prize-wrap li div{
+        width: 26px;
+        height: 26px;
+        margin: 0 auto 10px;
+      }
+      .mobile .win-prize-wrap li div img{
+        width: 100%;
+      }
+      .mobile .win-prize-wrap li p{
+        width: 50px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: #333;
+        text-align: center;
+      }
+      .mobile .luckey-draw-result .not-win-prize-box {
+        display: none;
+      }
+      .mobile .luckey-draw-result .not-win-prize{
+        width: 48px;
+        height: 51px;
+        margin: 46px auto 20px;
+      }
+      .mobile .luckey-draw-result .not-win-prize img{
+        width: 100%;
+      }
+      .mobile .luckey-draw-result .not-win-prize-tips{
+        margin: 0px 20px 20px 20px;
+        color: #333333;
+        font-size: 13px;
+        line-height: 23px;
+        text-align: center;
+      }
+      .mobile .luckey-draw-result .not-win-prize-tips span{
+        color: #FF412E;
+      }
+      .mobile .luckey-draw .lottery-mask2 {
+        background: rgba(0, 0, 0, 0.4);
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        z-index: 1000000;
+        display: none;
+      }
+    </style>
+  </head>
+  <body class="mobile">
+    <div id="webPlayer" class="web">
+      <div id="topHalf" class="section-top">
+        <div id="dispArea" class="disp-area">
+          <div id="video-box" class="video-container upper">
+            <div class="video-box">
+              <!-- 直播视频模块 -->
+              <div id="livePlayer"> </div>
+              <!-- <iframe id="cciframe_7243A12779D12F0BF3342D97BB1D6DF8" src="https://p.bokecc.com/playhtml.bo?vid=7243A12779D12F0BF3342D97BB1D6DF8&siteid=46D4E47F8AA7EAB4&autoStart=false&playerid=3C92096ACE3F7012&playertype=1" frameborder="0" height="100%" width="100%"></iframe> -->
+              <!-- <img width="100%" height="100%" src="/images/kv_1022.jpg"></img> -->
+              <!-- </div> -->
+            </div>
+          </div>
+        </div>
+        <div style="display:none;" class="waiting-layer">
+          <div>直播未开始</div>
+        </div>
+      </div>
+      <div style="width:100%;height:50px;">
+       <button  style="width:100%;height:50px;color:black;text-align: left;padding-left: 0px;">Living User <em id="people-number"></em></button>
+      </div>
+      <!-- <div style="width:100%;height:30px;">
+        <button id="full-screen">全屏</button>
+        <button id="openMuted">打开声音</button>
+        <button id="playBtn">播放</button>
+        <button id="hideBtn">隐藏控制条</button>
+        <button id="hideBtn">跳转到中文直播间</button>
+      </div> -->
+      <div id="bottomHalf" class="section-bottom">
+        <!-- <div class="gboxw">
+          <a href="javascript:void(0);" class="gbtn"></a>
+          <div class="gbox hide">
+            <span class="gcion02"></span>
+            <a href="javascript:void(0);" class="closegbox"></a>
+            <div>暂无公告</div>
+          </div>
+        </div> -->
+        <div class="tabs">
+          <ul>
+            <li name="announcement"><a href="javascript:void(0);">Agenda</a></li>
+            <li><a href="javascript:void(0);">Live chat</a></li>
+            <!-- <li class="qare">
+              <a href="javascript:void(0);">问答</a
+              ><span class="qatip">new</span>
+            </li> -->
+
+            <!-- <div class="menu"></div> -->
+          </ul>
+        </div>
+        <div class="slider-container">
+          <div class="container imgbox imgbox-scroll" id="imgbox">
+            <div class="slider-bd allow-roll" id="ppts" style="height:380px;">
+              <!-- <div class="nodoc" id="noppt">
+                <p>English Live Braodcastsing</p>
+              </div> -->
+
+              <!-- 直播文档模块 -->
+              <!-- <div id="drawPanel"></div> -->
+              <img class="intro_img" src="https://bp-resource.bestv.com.cn/intro_img_en_03031.jpg" />
+              <!--<iframe id="dpa" allow-scripts allowfullscreen allowusermedia frameborder="0"></iframe>-->
+            </div>
+          </div>
+          <div class="container chatBox">
+            <div class="slider-bd allow-roll">
+              <ul id="chat_container" class="msg-list" style="padding-bottom: 30px;"></ul>
+            </div>
+            <div class="slider-ft chat-submit">
+              <!-- <a class="btn-phiz embtn" href="javascript:void(0);"
+                ><span class="icon-phiz"></span
+              ></a> -->
+              <a
+                href="javascript:void(0);"
+                class="chatlistbtn"
+                for="all"
+                
+              ></a><!-- id="chatlistbtn" -->
+              <div class="chat-edit-area">
+                <input
+                  type="text"
+                  id="chat_input"
+                  placeholder=""
+                  class="chat_input"
+                />
+              </div>
+              <button
+                id="btn-chat-submit"
+                onclick="chatSend();"
+                class="submit-btn"
+                type="submit"
+              >
+               Send
+              </button>
+              <div class="submit-tips" id="alert_container">
+                <strong>您已经被禁言您已经被禁言</strong><em>×</em>
+              </div>
+            </div>
+          </div>
+          <div class="container chatBox">
+            <div class="slider-bd allow-roll">
+              <ul class="qalist" id="questionInfo"></ul>
+            </div>
+            <div class="slider-ft chat-submit" id="question">
+              <a href="javascript:void(0);" class="myask"></a>
+              <div class="chat-edit-area">
+                <input
+                  id="qaV"
+                  type="text"
+                  placeholder="我要提问..."
+                  class="chat_input"
+                />
+              </div>
+              <button
+                id="qaB"
+                class="submit-btn"
+                onclick="qaSend();"
+                type="submit"
+              >
+                Send
+              </button>
+              <div class="submit-tips" id="qaMsg">
+                <strong></strong><em>×</em>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="menuwrap">
+          <div class="menubox allow-roll">
+            <h3>切换线路:</h3>
+            <ul class="line"></ul>
+            <h3>切换清晰度:</h3>
+            <ul id='qualityDom' class="quality">
+            </ul>
+            <div class="danmubox">
+              <div class="btnl clearfix">
+                <span id="soundbtn">音频模式:</span>
+                <a href="javascript:void(0);"  class="soundbtn"></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 签到 -->
+      <div class="sign">
+        <div class="siandiv">
+          <div class="signline"></div>
+          <div class="signicon"></div>
+          <div class="signtxt"></div>
+          <div class="signbtn">
+            <button>我要签到</button>
+          </div>
+        </div>
+        <div class="maskbg"></div>
+      </div>
+
+      <!-- 抽奖 -->
+      <div class="lottery">
+        <div class="lotterydiv">
+          <div class="lotteryh3">正在抽奖</div>
+          <div class="lotteryclose"></div>
+          <div class="lotterynum"></div>
+          <div class="lotterytext">请牢记您的中奖码</div>
+          <div class="lotterybox">
+            <div class="lotterytext2">中奖者</div>
+            <div class="lotteryname"></div>
+          </div>
+        </div>
+        <div class="maskbg"></div>
+      </div>
+      <!-- 抽奖2.0 -->
+      <div class="luckey-draw">
+        <div class="lottery-mask2"></div>
+        <div class="tips-box tips-box-start" style="display: none;">
+            <p class="tips-title">提示</p>
+            <div class="tips-content">
+                <p class="tips-desc tips-start-desc">本次抽奖已取消</p>
+            </div>
+            <div class="tips-btn">
+                <button class="tips-submit tips-start-submit">
+                    确定
+                </button>
+            </div>
+        </div>
+        <div class="tips-box tips-box-end">
+            <p class="tips-title">提示</p>
+            <div class="tips-content">
+                <p class="tips-desc tips-end-desc"></p>
+            </div>
+            <div class="tips-btn">
+                <button class="tips-submit tips-end-submit">
+                    确定
+                </button>
+                <button class="tips-cancel">
+                    取消
+                </button>
+            </div>
+        </div>
+        <div class="luckey-drawdiv">
+            <div class="luckey-drawing">
+                <div class="luckey-drawing-h3"><lr:message code="lottery.tip" /></div>
+                <div class="luckey-drawing-close"></div>
+            </div>
+            <div class="luckey-draw-result">
+                <div class="luckey-draw-success">
+                    <p></p>
+                </div>
+                <div class="luckey-draw-error">
+                    <p></p>
+                </div>
+                <div class="luckey-draw-result-h3">抽奖结果</div>
+                <div class="luckey-draw-result-close"></div>
+                <div class="luckey-draw-content">
+                    <div class="win-prize-box">
+                        <p class="win-prize-tips">恭喜您获得了<span class="win-name"></span>,请牢记您的中奖码</p>
+                        <div class="win-prize-num"></div>
+                        <p class="cash-prize-tips">请在30分钟内输入以下信息，方便工作人员与您取得联系~</p>
+                        <div class="luckey-draw-info">
+                            <ul class="luckey-draw-info-list"></ul>
+                            <p class="submit-msg-tips"></p>
+                            <div class="luckey-draw-btn">提交</div>
+                        </div>
+                    </div>
+                    <div class="not-win-prize-box">
+                        <div class="not-win-prize"><img src="https://static.csslcloud.net/img/cry-face.png"></div>
+                        <p class="not-win-prize-tips">很遗憾，您没有获得<span class="no-win-name"></span></p>
+                    </div>
+                    <div class="win-prize-wrap win-prize-min-height">
+                        <div class="winning-list-title">中奖名单<span class="winning-list-icon down"></span></div>
+                        <ul class="win-prize-list"></ul>
+                    </div>
+                    <div class="win-prize-bottom"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+      <!-- 答题 -->
+      <div class="vote">
+        <div class="votediv">
+          <div class="vote-line"></div>
+          <div class="vote-close"></div>
+          <div id="vote1">
+            <div class="vote-icon"></div>
+            <h3>请选择答案</h3>
+            <div class="vote-tips">题干部分请参考文档或直播视频</div>
+            <ul class="vote-option"></ul>
+          </div>
+          <div id="vote2">
+            <div class="vote-icon2"></div>
+            <h3>答题统计</h3>
+            <div class="vote-tips">
+              答题结束，共<span id="vote-count"></span>人回答。
+            </div>
+            <div class="vote-a">
+              <span id="yansw">您的答案:<em></em></span>
+              <span id="cansw" class="vote-righta">正确答案:<em></em></span>
+            </div>
+            <ul class="vote-list"></ul>
+          </div>
+        </div>
+        <div class="maskbg"></div>
+      </div>
+    </div>
+    <a id="clipImage_down" style="display: none" download="clip-image.png"></a>
+    <input id="barrage" type="hidden" value="0" />
+    <input type="hidden" value="2" id="documentDisplayMode" />
+    <script src="//static.csslcloud.net/js/_fix_.js"></script>
+    <script src="js/jquery-1.9.0.min.js"></script>
+    <script src="js/handlebars.js"></script>
+    <script src="js/touchSlide.js"></script>
+    <script src="js/jquery.panzoom.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="../node_modules/vconsole/dist/vconsole.min.js"></script>
+    <script>
+        var vConsole = new VConsole();
+        // window.addEventListener('devicemotion', function (event) {
+        //     console.log(event.acceleration.x + ' m/s2');
+        // });
+    </script>
+    <script
+      src="js/liveSDK_en.js?v=202107051538"
+      type="text/javascript"
+    ></script>
+    <!-- <script
+      src="//view.csslcloud.net/js/sdk/3.6.0/liveSDK.js?v=202101061200"
+      type="text/javascript"
+    ></script> -->
+    <script src="js/chat_qa.js"></script>
+    <script src="js/cc.questionnaire.js"></script>
+    <script src="https://cdn.bootcss.com/vConsole/3.3.4/vconsole.min.js"></script>
+    	<script>
+	/*<![CDATA[*/
+      $(function() {
+        /* var vCC = new VConsole() */
+        $("#btn-clip").click(function(e) {
+          var base = DWLive.clipVideoImage();
+          $("#clipImage_down").attr("href", base);
+          $("#clipImage_down").click();
+        });
+        DWLive.init({
+		  userid : '5818A09A5D60B6F3',
+		  roomid : '8C3AE56C9B8DBCE09C33DC5901307461',
+		  groupid : '1',
+		  viewername : '"\u674E\u946B\u78CA"',
+		  viewertoken : '1234',
+          fastMode: false,
+          forceNew: localStorage.forceNew === "true" ? true : false
+        });
+
+        document.addEventListener(
+          "WeixinJSBridgeReady",
+          function() {
+            setTimeout(function() {
+              if ( document.getElementsByTagName("video")[0]) {
+                document.getElementsByTagName("video")[0].play();
+              }
+            }, 3000);
+          },
+          false
+        );
+
+        $(".embtn").bind("touchend", function(e) {
+          if ($("#embox").length > 0) {
+            $("#embox")
+              .hide()
+              .remove();
+          } else {
+            var strFace;
+            var path = "http:img/em2_mobile/";
+            if ($("#embox").length <= 0) {
+              strFace =
+                '<div id="embox" style="position:absolute;z-index:1000;bottom:39px;left:0;">' +
+                '<table border="0" cellspacing="0" cellpadding="0"><tr>';
+              for (var i = 1; i <= 20; i++) {
+                strFace +=
+                  '<td><img src="' +
+                  path +
+                  handleEm(i) +
+                  '.png" ontouchend="setEm(' +
+                  handleEm(i) +
+                  ')" /></td>';
+                if (i % 10 == 0) strFace += "</tr>";
+              }
+              strFace += "</table></div>";
+            }
+            $(".chatBox").append(strFace);
+            e.stopPropagation();
+          }
+        });
+
+        $("#alert_container").bind("touchend", function() {
+          $(this).hide();
+        });
+
+        DWLive.onKickOut = function(data) {
+          console.log(data);
+        };
+
+        DWLive.onHdLiveStartPunch = function(e) {
+          console.log("H5打卡", e);
+        };
+        DWLive.HDUserRemindWithAction = function(e) {
+          if (e.remindAction === 1) {
+            console.log("进入直播间", e);
+          } else if (e.remindAction === 0) {
+            console.log("退出直播间", e);
+          }
+        };
+        DWLive.HDBanChatBroadcastWithData = function(e) {
+          console.log("H5禁言", e);
+        };
+
+        var m3u8 = null;
+
+        DWLive.onHDReceivedVideoQuality = function (data) {
+          var currentQuality = DWLive.getQualityIndex()
+          var qualityHTML = data.map(function (item, index) {
+            var itemHTML
+            if (currentQuality === item.quality) {
+              itemHTML = '<li class="active" id="quality' + item.quality + '" onclick="changeQuality('+ item.quality +')">' + item.desc + '</li>'
+            } else {
+              itemHTML = '<li id="quality' + item.quality + '" onclick="changeQuality(' + item.quality + ')">' + item.desc + '</li>'
+            }
+            return itemHTML
+          }).join('')
+          $('#qualityDom').append(qualityHTML)
+        }
+        window.changeQuality = function (quality) {
+          DWLive.changeQuality(quality, function (data) {
+            console.log('changeQuality', data)
+          })
+          $("#qualityDom li").removeClass('active')
+          $("#quality" + DWLive.getQualityIndex()).addClass('active')
+        }
+
+        DWLive.onLiveStarting = function() {
+          m3u8 = DWLive.getLine(); // 获取线路
+          $(".line").empty();
+          $.each(m3u8, function(index, pd) {
+            var acls = "";
+            if (index == 0) {
+              acls = "active";
+            }
+            $(".line").append(
+              '<li class="' +
+                acls +
+                '" pd="' +
+                pd +
+                '"><span></span>线路' +
+                (index + 1) +
+                "</li>"
+            );
+          });
+
+          $(".line li").click(function() {
+            $(".line li").removeClass("active");
+            $(this).addClass("active");
+
+            // 线路切换
+            DWLive.changeLine($(".line li").index($(".line li.active")));
+          });
+
+          // 音频模式
+          // var vdom = $(".video-box").html();
+          window.ISAUDIOMODEL = false;
+          $(".soundbtn").click(function() {
+            window.ISAUDIOMODEL = !window.ISAUDIOMODEL;
+            if (window.ISAUDIOMODEL) {
+              $(this).addClass("active");
+              $(".waiting-layer")
+                .show()
+                .html("<div>音频模式</div>");
+              DWLive.onlyAudio();
+              // $(".video-box").html("");
+            } else {
+              $(this).removeClass("active");
+              $(".waiting-layer").hide();
+
+              // $(".video-box").html(vdom);
+              DWLive.onlyAudio();
+            }
+          });
+        };
+
+        function isWeiXin() {
+          var ua = window.navigator.userAgent.toLowerCase();
+          if (
+            ua.match(/MicroMessenger/i) == "micromessenger" &&
+            (navigator.userAgent.match(/iPad/i) != null ||
+              navigator.userAgent.match(/iPhone/i) != null)
+          ) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+
+        if (isWeiXin()) {
+          //禁止浏览器后退时，极速文档动画被翻页
+          window.frames.history.pushState(
+            null,
+            null,
+            window.frames.document.URL
+          );
+          window.frames.addEventListener("popstate", function() {
+            window.frames.history.pushState(
+              null,
+              null,
+              window.frames.document.URL
+            );
+          });
+          DWLive.onPageChange = function(data) {
+            window.frames.history.pushState(
+              null,
+              null,
+              window.frames.document.URL
+            );
+            window.frames.addEventListener("popstate", function(e) {
+              window.frames.history.go(0);
+              window.frames.history.pushState(
+                null,
+                null,
+                window.frames.document.URL
+              );
+            });
+          };
+        }
+
+        $("#chat_input").focus(function() {
+          $("#qaV").attr("tabIndex", "-1");
+          $(this).attr("tabIndex", "1");
+          if (isWeiXin()) {
+            setTimeout(function() {
+              $("body").scrollTop(10000);
+            }, 100);
+          }
+        });
+
+        $("#qaV").focus(function() {
+          $("#chat_input").attr("tabIndex", "-1");
+          if (isWeiXin()) {
+            setTimeout(function() {
+              $("body").scrollTop(10000);
+            }, 100);
+          }
+        });
+
+        $("#chat_input").blur(function() {
+          $("body").scrollTop(0);
+        });
+
+        $("#qaV").blur(function() {
+          $("body").scrollTop(0);
+        });
+      });
+
+      $('#full-screen').click(function(e){
+        DWLive.switchFullScreen(e)
+      });
+      
+      
+      $("#toEngLive").click(function(e) {
+    	 location.href = location.href.replace(/lang=en/, "lang=zh");
+      });
+      var isMuted = false
+      $('#openMuted').click (function () {
+        isMuted = !isMuted
+        if (isMuted) {
+          DWLive.openSound()
+        } else {
+          DWLive.closeSound()
+        }
+      })
+      $('#playBtn').click (function () {
+        DWLive.play()
+      })
+      $('#hideBtn').click (function () {
+        DWLive.showControl(false)
+      })
+
+      function handleEm(i) {
+        if (i < 10) {
+          return "0" + i;
+        }
+        return i;
+      }
+
+      function showEm(str) {
+        if (!$.trim(str)) {
+          return "";
+        }
+        var str = $.trim(str);
+        str = str.replace(/\</g, "&lt;");
+        str = str.replace(/\>/g, "&gt;");
+        str = str.replace(/\n/g, "<br/>");
+        str = str.replace(
+          /\[em_([0-9]*)\]/g,
+          '<img src="img/em/$1.gif" border="0" />'
+        );
+        str = str.replace(
+          /\[em2_([0-9]*)\]/g,
+          '<img src="img/em2/$1.png" border="0" />'
+        );
+
+        var nmsg = "";
+        var reg = new RegExp(/\[img_http(s)?:\/\/(.*?)\]/g);
+        var isImage = reg.test(str);
+        if (isImage) {
+          var sIndex = str.indexOf("_") + 1;
+          nmsg = str.slice(sIndex, str.length - 1);
+          var imgTag =
+            '<div class="chatImage" style="width: 100%; cursor: pointer;" ><img src="' +
+            nmsg +
+            '"  style="width: 100%;"/></div>';
+          return imgTag;
+        }
+
+        $.each(str.split(" "), function(i, n) {
+          n = $.trim(n);
+          if (
+            n.indexOf("[uri_") == 0 &&
+            n.indexOf("]") == n.length - 1 &&
+            n.length > 6
+          ) {
+            var u = n.substring(5, n.length - 1) + " ";
+            nmsg +=
+              '<a target="_blank" style="color: #2f53ff" href="' +
+              u +
+              '">' +
+              u +
+              "</a>" +
+              " ";
+          } else {
+            nmsg += n + " ";
+          }
+        });
+        return nmsg;
+      }
+
+      function setEm(e) {
+        var emstr = "[em2_" + handleEm(e) + "]";
+        $("#embox")
+          .hide()
+          .remove();
+        $("#chat_input").val(function() {
+          return $(this).val() + emstr;
+        });
+      }
+
+      $(document).bind("touchend", function() {
+        while ($("#embox").length > 0) {
+          $("#embox")
+            .hide()
+            .remove();
+        }
+      });
+
+      window.onbeforeunload = function(e) {
+        if (window.LivePlayer && window.LivePlayer.isPublishing) {
+          return "您确定要离开直播间吗？";
+        } else {
+          if (!window.event) {
+            return null;
+          }
+        }
+      };
+
+      // 获取播放器自定义背景图片
+      DWLive.playerBackgroundImageUri = function(data) {
+        console.log("sdsds"+data);
+        $("#livePlayer").css("background","url("+data+") center center / contain no-repeat rgb(0, 0, 0)");
+      };
+
+      // 获取播放器自定义提示语
+      DWLive.playerBackgroundHint = function(data) {
+        console.log(data);
+      };
+
+      window.onorientationchange = function() {
+        if (orientation == 0) {
+          setTimeout(function() {
+            var src = $("#dpa").attr("src");
+            $("#dpa").attr("src", src);
+          }, 100);
+        }
+      };
+      /**
+       * 抽奖2.0
+       * */ 
+      var winPrizeTime
+      var lotteryId
+      DWLive.onLottery = function (data) {
+        $('.luckey-draw').hide()
+        $('.win-prize-box').hide()
+        $('.luckey-draw-result').hide()
+        if (data.haveLottery) { // 有抽奖
+          lotteryId = data.lotteryId
+          if (data.lotteryStatus === 0) { // 抽奖ing
+            $('.luckey-draw').show()
+            $('.luckey-drawing').show()
+          } else if (data.lotteryStatus === 1) { // 取消抽奖
+            $('.luckey-draw').show()
+            $('.luckey-drawing').hide()
+            $('.tips-box-start').show()
+          } else if (data.lotteryStatus === 2) { // 抽奖结束
+            $('.luckey-draw-result').show()
+            $('.luckey-drawing').hide()
+            if (data.LotteryWinInfo.isWinner) {  // 中奖
+              winPrizeTime = new Date()
+              luckeyCloseLock = true
+              $('.luckey-draw').show()
+              $('.win-prize-box').show()
+              $('.not-win-prize-box').hide()
+              $('.luckey-draw-result').show()
+              $('.win-name').html(data.LotteryWinInfo.ownUserInfo.userName)
+              $('.win-prize-num').html(data.LotteryWinInfo.ownUserInfo.prizeCode)
+              if (data.LotteryWinInfo.LotteryCollectTemplate.length === 0) {
+                luckeyCloseLock = false
+                $('.luckey-draw-btn').hide().html('提交')
+                $('.cash-prize-tips').hide()
+              } else {
+                $('.luckey-draw-btn').show().html('提交')
+                $('.cash-prize-tips').show()
+              }
+              var submmitHTML = data.LotteryWinInfo.LotteryCollectTemplate.map(function (item, index) {
+                var itemHTML
+                if (index === 0) {
+                  itemHTML = '<li class="collect-list" collect-id="' + item.index + '"><label for="name">' + item.title + '</label><input  type="text" placeholder="请输入姓名"></li>'
+                } else if (index === 1) {
+                  itemHTML = '<li class="collect-list" collect-id="' + item.index + '"><label for="name">' + item.title + '</label><input  type="text" placeholder="请输入电话号码"></li>'
+                } else {
+                  itemHTML = '<li class="collect-list" collect-id="' + item.index + '"><label for="name">' + item.title + '</label><input  type="text" placeholder="' + item.tips + '"></li>'
+                }
+                return itemHTML
+              }).join('')
+              $('.luckey-draw-info-list').html(submmitHTML)
+            } else { // 未中奖
+              console.log('---未中奖')
+              $('.luckey-draw').show()
+              $('.win-prize-box').hide()
+              $('.not-win-prize-box').show()
+              $('.no-win-name').html('【'+HTMLEncode2(data.LotteryWinInfo.LotteryPrize.name)+'】')
+            }
+            var userInfoHTML = data.LotteryWinInfo.LotteryUserInfo.map(function (item) {
+              var itemHTML = '<li> <div><img src="https://view.csslcloud.net/images/lottery-v2/normal.png"></div> <p>' + item.userName + '</p></li>'
+              return itemHTML
+            }).join('')
+            $('.win-prize-list').html(userInfoHTML)
+          }
+        } else { // 没有抽奖，隐藏抽奖相关
+          $('#luckey-draw').hide()
+        }
+      }
+
+      function HTMLEncode2(html) {
+        var temp = document.createElement("div");
+        (temp.textContent != null) ? (temp.textContent = html) : (temp.innerText = html);
+        var output = temp.innerHTML;
+        temp = null;
+        return output;
+      }
+
+      var collectLock = true; //提交按钮点击开关
+      var luckeyCloseLock = false; //点击关闭提示弹窗
+      // v2.0中奖提交用户信息
+      $('.luckey-draw-btn').click(function () {
+        var collectList = $('.luckey-draw-info-list li')
+        var collectData = []
+        for (let i = 0; i < collectList.length; i++) {
+          var collectIndex = collectList.eq(i).attr('collect-id')
+          var collectValue = collectList.eq(i).find('input').val()
+          collectData.push({
+            index: collectIndex*1,
+            value: collectValue
+          })
+        }
+        var collectBody = {
+          lotteryId: lotteryId,
+          collectInfos: collectData
+        }
+        var nowTime = new Date()
+        var reduceTime = nowTime-winPrizeTime;
+        if(reduceTime > 1800000){
+          $('.luckey-draw-success').hide()
+          $('.luckey-draw-error').show()
+          $('.luckey-draw-error p').html('已超过提交时间，提交失败')
+          luckeyCloseLock = false;
+          setTimeout( function() {
+            $('.luckey-draw-error').hide()
+          }, 1000);
+        }else{
+          DWLive.commitLottery(collectBody, {
+            onSuccess: function (reuslt) {
+              $('.luckey-draw').hide()
+              console.log('commitLottery:: reuslt', reuslt)
+            },
+            onError: function (err) {
+              $('.submit-msg-tips').show()
+              $('.submit-msg-tips').html(err)
+            }
+          })
+        }
+      })
+
+      //抽奖结果关闭
+      $('.luckey-draw-result-close').click(function (){
+        if(luckeyCloseLock){
+          //展示弹窗
+          $('.tips-box-end').show()
+          $('.tips-end-desc').html('您还没有提交信息，确定要关闭么？')
+          $('.tips-cancel').show()
+          $('.lottery-mask2').show()
+        }else{
+          //不展示弹窗
+          $('.luckey-draw').hide()
+        }
+      })
+
+      //抽奖中关闭
+      $('.luckey-drawing-close').click(function (){
+        $('.luckey-draw').hide()
+      })
+
+      //抽奖中提示弹窗确定按钮
+      $('.tips-start-submit').click(function(){
+        $('.tips-box-start').hide()
+        $('.lottery-mask2').hide()
+        $('.luckey-draw').hide()
+      })
+      //抽奖结果提示弹窗确定按钮
+      $('.tips-end-submit').click(function(){
+        $('.lottery-mask2').hide()
+        $('.tips-box-end').hide()
+        $('.luckey-draw').hide()
+      })
+      //抽奖提示弹窗取消按钮
+      $('.tips-cancel').click(function(){
+        $('.tips-box-end').hide()
+        $('.lottery-mask2').hide()
+      })
+
+      // 中奖名单
+    var isWinPrize = false;
+    $('.winning-list-title').click(function(){
+      isWinPrize = !isWinPrize;
+      if(isWinPrize){//展开
+        $('.winning-list-icon').removeClass('down')
+        $('.winning-list-icon').addClass('up')
+        $('.win-prize-wrap').removeClass('win-prize-min-height')
+      }else{//收起
+        $('.winning-list-icon').removeClass('up')
+        $('.winning-list-icon').addClass('down')
+        $('.win-prize-wrap').addClass('win-prize-min-height')
+      }
+    })
+    
+    
+    getCountFun();
+    window.setInterval("getCountFun()",1000*17);
+    
+    function getCountFun(){
+    	$.get("/count?id=0303", function(data,status){
+    		console.log(data);
+            $("#people-number").html(data);
+        });
+    }
+	/*]]>*/
+    </script>
+  </body>
+</html>
