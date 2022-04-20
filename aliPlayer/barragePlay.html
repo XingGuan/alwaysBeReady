@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <meta name="viewport"
+        content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+    <title>Aliplayer Functions</title>
+    <link rel="stylesheet" href="https://g.alicdn.com/de/prismplayer/2.9.19/skins/default/aliplayer-min.css" />
+    <script type="text/javascript" charset="utf-8"
+        src="https://g.alicdn.com/de/prismplayer/2.9.19/aliplayer-min.js"></script>
+    <script src="./CommentCoreLibrary.js"></script>
+    <!-- 请下载之后使用 -->
+    <script type="text/javascript" charset="utf-8" src="./aliplayercomponents-1.0.8.min.js"></script>
+    <style>
+        .ali-danmu-input{
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="player-con"></div>
+    <script>
+        /* The bullet screen component is integrated with CommentCoreLibrary. For more information, see https://github.com/jabbany/CommentCoreLibrary/ */
+        var danmukuList = [{
+            "mode": 1,
+            "text": "test",
+            "stime": 1000,
+            "size": 25,
+            "color": 0xffffff
+        }, {
+            "mode": 1,
+            "text": "test",
+            "stime": 2000,
+            "size": 25,
+            "color": 0xff0000
+        }, {
+            "mode": 1,
+            "text": "test",
+            "stime": 30000,
+            "size": 25,
+            "color": 0xff0000
+        }, {
+            "mode": 1,
+            "text": "test",
+            "stime": 4000,
+            "size": 25,
+            "color": 0x00c1de
+        }, {
+            "mode": 1,
+            "text": "test",
+            "stime": 5000,
+            "size": 25,
+            "color": 0x00c1de
+        }, {
+            "mode": 1,
+            "text": "test",
+            "stime": 10000,
+            "size": 25,
+            "color": 0x00c1de
+        }, {
+            "mode": 1,
+            "text": "test",
+            "stime": 1000,
+            "size": 25,
+            "color": 0xffffff
+        }, {
+            "mode": 1,
+            "text": "test",
+            "stime": 1000,
+            "size": 25,
+            "color": 0xffffff
+        }, {
+            "mode": 1,
+            "text": "test",
+            "stime": 1000,
+            "size": 25,
+            "color": 0xffffff
+        }, {
+            "mode": 1,
+            "text": "test",
+            "stime": 1000,
+            "size": 25,
+            "color": 0xffffff
+        }, {
+            "mode": 1,
+            "text": "test",
+            "stime": 1000,
+            "size": 25,
+            "color": 0xffffff
+        }, {
+            "mode": 1,
+            "text": "test",
+            "stime": 1000,
+            "size": 25,
+            "color": 0xffffff
+        }, {
+            "mode": 1,
+            "text": "test",
+            "stime": 1000,
+            "size": 25,
+            "color": 0xffffff
+        }, {
+            "mode": 1,
+            "text": "test",
+            "stime": 1000,
+            "size": 25,
+            "color": 0xffffff
+        }, {
+            "mode": 1,
+            "text": "test",
+            "stime": 1000,
+            "size": 25,
+            "color": 0xffffff
+        }, {
+            "mode": 1,
+            "text": "test",
+            "stime": 1000,
+            "size": 25,
+            "color": 0xffffff
+        }, {
+            "mode": 1,
+            "text": "test",
+            "stime": 1000,
+            "size": 25,
+            "color": 0xffffff
+        }, {
+            "mode": 1,
+            "text": "test",
+            "stime": 1000,
+            "size": 25,
+            "color": 0xffffff
+        }, {
+            "mode": 1,
+            "text": "test",
+            "stime": 1000,
+            "size": 25,
+            "color": 0xffffff
+        }]
+        var player = new Aliplayer({
+            id: "player-con",
+            source: "https://bp-live.bestv.com.cn/live/bestjbty_watermark.m3u8?auth_key=1646370002-71eabf03f21a41a9a248e5b655e1b1e9-0-fcb54f0783ac26db4f5d6ccf6a2e5d45",
+            width: "100%",
+            height: "500px",
+            autoplay: true,
+            isLive: true,
+            rePlay: false,
+            preload: true,
+            playsinline: true,
+            controlBarVisibility: 'click',    /* The mode of the status bar, which is set to Click. */
+            showBarTime: '10000',             /* The time period that you must wait before the status bar is hidden, which is set to 10,000 milliseconds. */
+            skinLayout: [
+                {
+                    name: "controlBar",
+                    align: "blabs",
+                    x: 0,
+                    y: 0,
+                    children: [
+                        { name: "progress", align: "blabs", x: 0, y: 44 },
+                        { name: "playButton", align: "tl", x: 15, y: 12 },
+                        { name: "timeDisplay", align: "tl", x: 10, y: 7 },
+                        { name: "fullScreenButton", align: "tr", x: 10, y: 12 },
+                        // { name: "subtitle", align: "tr", x: 15, y: 12 },
+                        { name: "setting", align: "tr", x: 15, y: 12 },
+                        { name: "volume", align: "tr", x: 5, y: 10 }
+                    ]
+                }
+            ],
+            components: [{
+                name: 'AliplayerDanmuComponent',
+                type: AliPlayerComponent.AliplayerDanmuComponent,
+                args: [danmukuList]
+            }]
+        }, function (player) {
+            console.log("The player is created");
+        });
+        
+
+    </script>
+</body>
+
+</html>
