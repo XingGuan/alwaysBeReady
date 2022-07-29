@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /*移除datalist下拉箭头*/
+        input::-webkit-calendar-picker-indicator {
+            display: none !important;
+            -webkit-appearance: none !important;
+        }
+    </style>
+</head>
+
+<body>
+    <input placeholder="搜索..." type="search" autocomplete="off" list="custom-datalist">
+    <datalist id="custom-datalist">
+        <option value="IDEA">PhpStorm/WebStorm/PyCharm</option>
+        <option value="Java">Spring Boot</option>
+        <option value="OpenResty">Lua</option>
+        <option value="PostgreSQL">pgadmin</option>
+        <option value="小程序">
+    </datalist>
+</body>
+
+</html>
