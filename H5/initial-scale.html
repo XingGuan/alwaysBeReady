@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width">
+    <title>Document</title>
+    <style>
+        .rectangle {}
+
+        .iframe {
+            width: 100%;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="rectangle">
+        <iframe class="iframe" src="http://lrm-stg.ibbtv.cn/home" frameborder="0">
+
+        </iframe>
+    </div>
+    <script>
+        function viewPort() {
+            const meta = document.querySelector('meta[name="viewport"]');
+            // const scale = window.screen.width / 750 > 1 ? 1 : window.screen.width / 750;
+            const scale = 1;
+            meta.content = `width=device-width,initial-scale=${scale}`
+            // console.info('xxxxxx', scale, window.screen.width);
+        }
+        viewPort();
+        window.onresize = viewPort;
+        console.log("视觉视口大小", window.innerWidth);  
+
+    </script>
+</body>
+
+</html>
