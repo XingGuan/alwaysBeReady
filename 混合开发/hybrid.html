@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hybrid</title>
+    <link rel="stylesheet" type="text/css" href="./main.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="./vue.js"></script>
+    <script src="./axios.min.js"></script>
+    <script src="./jquery-1.7.2.min.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="./request.js"></script>
+    <script src="./hybrid.js"></script>
+    <script src="https://wechatfe.github.io/lib/vconsole/3.4.1/vconsole.min.js"></script>
+    <script>
+        let vConsole = new VConsole();
+    </script>
+</head>
+
+<body>
+    <div id="app" class="demo">
+        <template>
+            <div class="button-group">
+                <el-button class="demo-button" @click="translates(3)">
+                    打开app会员权益
+                </el-button>
+
+                <el-button class="demo-button" @click="openBestvPlusModePage()">
+                    打开app其他首页
+                </el-button>
+            </div>
+            <div class="button-group">
+                <el-button class="demo-button" @click="openBestvPlus('https://app.bestv.cn/')">
+                    在app打开h5页面
+                </el-button>
+                <el-button class="demo-button" @click="openBestvPlusVideoPage('2398','40380')">
+                    在app打开视频播放页
+                </el-button>
+            </div>
+            <div class="button-group">
+                <el-button v-if="isButtonShareShown" class="demo-button" @click="sharePage('https://app.bestv.cn/')">
+                    app内调起分享
+                </el-button>
+                <el-button v-else class="demo-button">
+                    app外无法展示app内分享按钮
+                </el-button>
+            </div>
+        </template>
+    </div>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    isButtonShareShown: false, // 显示分享按钮
+                }
+            },
+            mounted() {
+                if (!isBestv()) {
+                    // 隐藏分享按钮
+                    this.isButtonShareShown = false;
+                } else {
+                    // 显示分享按钮
+                    this.isButtonShareShown = true;
+                }
+            },
+            methods: {
+                initShare() {
+                    //给app页面传递分享参数
+                    var initShare = {
+                        "cmd": "initShareData",
+                        "log": 'https://app.bestv.cn/static/logo108_108.png',
+                        "title": "分享测试！",
+                        "des": `人小鬼大，潮童天下，期待你来录像哟！`
+                    };
+                    initShareData(initShare);
+                },
+                //在APP内，app通讯模块初始化完成再获取用户信息
+                // bridgeInitFinish() {
+                //     // toastErrorMessage("bridgeInitFinish");
+                //     // 页面加载后初始数据，用户信息，我的银光棒，视频信息，签到信息，哥哥排名，哥哥信息。
+                //     getUserInfoJson(function (userinfo) {
+                //         var userData = eval('(' + userinfo + ')');
+                //         userid = userData.id;
+                //         token = userData.token;
+                //         console.info(userid + '---------', token)
+                //     });
+                // }
+            }
+        });
+    </script>
+</body>
+
+</html>
