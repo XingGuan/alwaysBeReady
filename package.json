@@ -1,0 +1,27 @@
+{
+  "name": "alwaysBeReady",
+  "version": "1.0.0",
+  "description": "alwaysBeReady\r 前端知识点分类总结",
+  "main": "Node.js",
+  "dependencies": {
+    "callapp-lib": "^3.5.0",
+    "postcss-cli": "^10.0.0",
+    "terser": "^5.15.0",
+    "vconsole": "^3.4.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XingGuan/alwaysBeReady.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/XingGuan/alwaysBeReady/issues"
+  },
+  "homepage": "https://github.com/XingGuan/alwaysBeReady#readme"
+}
