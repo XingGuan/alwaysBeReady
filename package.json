@@ -19,7 +19,7 @@
     "webpack-dev-server": "^4.11.1"
   },
   "scripts": {
-    "test": "webpack",
+    "build": "webpack",
     "start": "webpack serve",
     "jest": "jest"
   },
