@@ -1,0 +1,66 @@
+<!--
+ * @Descripttion: 
+ * @Author: GXing
+ * @Date: 2023-02-19 13:14:17
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>js-bridge</title>
+</head>
+
+<body>
+    <p>JS Bridge</p>
+    <!-- <iframe id="iframe1"></iframe> -->
+    <script>
+        // // 注册全局API的方式,native把方法注册在`webview`上，让`H5`来调用。   
+        // // const version = window.getVersion();   
+        // const iframe1 = document.getElementById("iframe1");
+        // iframe1.onload = () => {
+        //     const content = iframe1.contentWindow.document.body.innerHTML;
+        //     // `contentWindow`属性能够以`HTML`对象来返回`iframe`中的文档，可以通过所有标准的`DOM`方法来处理被返回的对象。   
+        //     console.info('aaaaaa', content);
+        // }
+        // // iframe1.src = "http://192.168.110.246:8080/FE精选/知识深度，原理和源码/js-bridge-test.html";
+        // // 自定义协议，非`http`协议或`https`协议  
+        // iframe1.src = "my-app-name://api/getVersion";  
+        // // URL scheme,既能保证`App`和网页间的通讯，又能保证异步的问题。
+        // /* chrome://dino/ */
+        // /* chrome://version/ */
+        /* 封装 JS-bridge */
+        /* invoke调用的意思 */
+        const sdk = {
+            invoke(url, data = {}, onSuccess, onError) {
+                const iframe = document.createElement('iframe');
+                iframe.style.visibility = 'hidden';
+                document.body.appendChild(iframe);
+                iframe.onload(() => {
+                    const content = iframe.contentWindow.document.body.innerHTML;
+                    onSuccess(JSON.parse(content));
+                    iframe.remove();
+                });
+                iframe.onerror = () => {
+                    onError();
+                    iframe.remove();
+                }
+                iframe.src = `my-app-name://${url}?data=${JSON.stringify(data)}`;
+            },
+            fn1(data, onSuccess, onError) {
+                this.invoke('api/fn1', data, onSuccess, onError);
+            },
+            fn2(data, onSuccess, onError) {
+                this.invoke('api/fn2', data, onSuccess, onError);
+            },
+            fn3(data, onSuccess, onError) {
+                this.invoke('api/fn1', data, onSuccess, onError);
+            }
+        }
+        // sdk.fn1();
+    </script>
+</body>
+
+</html>
