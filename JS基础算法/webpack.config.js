@@ -5,7 +5,7 @@
  */
 const path = require('path');  // node自带包
 module.exports = {
-  entry:'./给一个数组，找出其中和为n的两个元素/two-numbers-sums.ts',   // 打包对入口文件，期望打包对文件入口
+  entry:'./求二叉搜索树的第k小值/binary-search-tree.ts',   // 打包对入口文件，期望打包对文件入口
   output:{
     filename:'test.js',   // 输出文件名称
     path:path.resolve(__dirname,'dist')  //获取输出路径
