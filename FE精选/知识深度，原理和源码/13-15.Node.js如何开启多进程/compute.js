@@ -10,6 +10,7 @@ function getSum() {
     }
     return sum;
 }
+// 接收主进程发过来的消息
 process.on('message', data => {
     console.log('子进程id', process.pid);
     console.log('子进程接收到的信息', data);
