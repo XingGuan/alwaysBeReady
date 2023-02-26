@@ -13,7 +13,7 @@
 ## 二叉搜索树(BTS)(Binary Search Tree)   
 + left(包括其后代) `value <= root value`  
 + right(包括其后代) `value >= root value`  
-> 二叉搜索树的价值：可使用**二分法**进行快速查找，能够快速实现查找    
+> 二叉搜索树的价值：可使用**二分法**进行快速查找，能够快速实现查找  
 
    
 
