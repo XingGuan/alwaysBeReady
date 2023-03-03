@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中间自适应三栏布局</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+        }
+        .left{
+            width: 100px;
+            height: 100vh;
+            float: left;
+            background-color: antiquewhite;
+        }
+        .main{
+            height: 100vh;
+            background-color: coral;
+            overflow: hidden;
+        }
+        .right{
+            width: 200px;
+            height: 600px;
+            float: right;
+            background-color: aquamarine;
+        }
+    </style>
+</head>
+<body>
+    <div class="left"></div>
+    <div class="right"></div>
+    <div class="main"></div>
+</body>
+</html>

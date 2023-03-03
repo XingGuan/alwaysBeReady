@@ -2,22 +2,22 @@
 首先，让我们看下在`JavaScript`中如何转化列表。   
 如下代码，我们使用 map() 函数让数组中的每一项变双倍，然后我们得到了一个新的列表 doubled 并打印出来：  
 ```javascript
-const numbers = [1, 2, 3, 4, 5];
-const doubled = numbers.map((number) => number * 2);
-console.log(doubled);
+const numbers = [1, 2, 3, 4, 5];  
+const doubled = numbers.map((number) => number * 2);  
+console.log(doubled);   
 ```  
 代码打印出 [2, 4, 6, 8, 10]。  
 在`React`中，把数组转化为**元素**列表的过程是相似的。    
 
-### 渲染多个组件  
-可以通过`{}`在`JSX`内构建一个`元素集合`。    
+### 渲染多个组件    
+可以通过`{}`在`JSX`内构建一个`元素集合`。      
 我们使用`JavaScript`中的`map()`方法来遍历`numbers`数组。将数组中的每个元素变成`<li>`标签，最后我们将得到的数组赋值给`listItems`：   
-```javascript
+```javascript  
 const numbers = [1,2,3,4,5];   
 const listItems = numbers.map((number)=>{
     <li>{number}</li>
 });
-```  
+```   
 我们把整个`listItems`插入到`<ul>`元素中，然后渲染进`DOM`：   
 ```javascript   
 ReactDOM.render(
@@ -29,7 +29,7 @@ ReactDOM.render(
 
 ### 基础列表组件   
 通常你需要在一个**组件**中渲染列表。   
-我们可以把前面的例子重构成一个组件，这个组件接收`numbers`数组作为参数并输出一个元素列表。    
+我们可以把前面的例子重构成一个组件，这个组件接收   `numbers`数组作为参数并输出一个元素列表。    
 ```javascript
     function numberList(props){
         const numbers = props.numbers;
@@ -173,5 +173,8 @@ function NumberList(props){
 }
 ```  
 
-`如果一个 map() 嵌套了太多层级，那可能就是你提取组件的一个好时机。`
+`如果一个 map() 嵌套了太多层级，那可能就是你提取组件的一个好时机。`    
+
+
+
  

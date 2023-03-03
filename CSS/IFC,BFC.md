@@ -25,7 +25,55 @@
 
 [参考文档](https://www.cnblogs.com/nyw1983/p/11326599.html)
 
-## FC
+## FC  
+`FC(Formatting Context)`格式化上下文，其实指的是一个渲染区域，拥有一套渲染规则，它决定了其子元素如何定位，以及与其他元素之间的关系和相互作用。
+### FC类型    
++ `BFC` 块级格式化上下文(`Block Formatting contexts`)  
++ `IFC` 行内格式化上下文(`inline Formatting contexts`)  
++ `FFC` 自适应(弹性盒)格式化上下文(`Flex Formating Contexts`)
++ `GFC` 网格布局格式化上下文(`GridLayout Formatting Contexts`)    
+
+> `FC(格式化上下文)`是`W3C` `CSS2.1`规范中的一个概念   
+> `FC`是页面上的一块渲染区域，并且有一套渲染规则，它决定了其子元素将如何定位,以及和其他元素的关系、相互作用。
+> 格式化上下文指的是初始元素定义的环境。包含两个要点，元素定义和初始化。   
+> 在`CSS`中，元素定义的环境有两种，一种是块级格式化上下文(BFC)，另一种是行内格式化上下文(IFC)。这两种上下文定义了在`CSS`中元素所处的环境，格式化则表明了在这个环境中，元素处于此环境当中应当被初始化，即元素在此环境中应当如何布局等。   
+
+## `BFC`  
+[BFC](https://juejin.cn/post/6950082193632788493)
+
+`BFC`全称:`Block Formatting Context`，名为"块级格式化上下文"  
+`W3C`官方解释为:`BFC`它决定了元素如何对其内容进行定位，以及与其它元素的关系和相互作用，当涉及到可视化布局时，`Block Formatting Context`提供了一个环境，`HTML`在这个环境中按照一定的规则进行布局。  
+
+> `BFC`是一个完全独立的空间(布局环境)，让空间里的子元素不会影响到外面的布局。那么怎么使用`BFC`呢，`BFC`可以看做是一个`CSS`元素属性。   
+
+
+### 怎样触发`BFC`  
+触发`BFC`使用的`CSS`属性
+```css
+ overflow:hidden;  
+ display:inline-block;
+ position:absolute;
+ position:fixed;
+ display:flex;
+ display:table-cell;
+```  
+## BFC的规则  
++ `BFC`就是一个块级元素，块级元素会在垂直方向上一个接一个的排列。  
++ `BFC`就是页面中的一个隔离的独立容器，容器里标签不会影响外部标签。  
++ 垂直方向的距离由`margin`决定，属于同一个`BFC`的两个相邻的标签的外边距会发生重叠  
++ 计算`BFC`的高度时，浮动元素也参与计算  
++ 每个元素的左外边距与包含块的左外边界相接触(从左向右)，即使浮动元素也是如此。(这说明`BFC`中子元素不会超出他的包含块，而`position`为`absolute`的元素可以超出他的包含块边界)  
++ `BFC`的区域不会与`float`的元素区域重叠  
+ 
+## `BFC`解决了什么问题  
+1.使用`Float`脱离文档流，高度塌陷   
+2.`Margin`边距重叠  
+3.两栏布局  
+
+
+
+
+
 [grid布局](http://www.ruanyifeng.com/blog/2019/03/grid-layout-tutorial.html)
 [参考文档1](https://segmentfault.com/a/1190000009545742)
 [参考文档2](https://segmentfault.com/a/1190000013372963)
