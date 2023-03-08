@@ -4,6 +4,25 @@
 在`React.component`的子类中有个必须定义的`Render()`函数。  
 > 我们强烈建议你不要创建自己的组件基类。在`React`组件中，代码重用的主要方式是组合而不是继承。  
 
+## 组件的生命周期总结   
+**挂载阶段**   当组件实例被创建并插入`dom`中时，其生命周期调用顺序如下:  
++ 1.`constructor`: 在`React`组件挂载之前会调用它的构造函数  
++ 2.`getDerivedStateFromProps`:在调用`render`方法之前调用，并且在挂载及后续更新都会被调用。
++ 3.`render()`,`render()`方法是`react`组件中唯一必须实现的方法。   
++ 4.`componentDidMount()`:在组件挂载后，(插入`DOM`树中)立即调用。  
+
+**更新阶段**  每当组件的`state`和`props`发生变化时，组件就会更新。组件更新的生命周期调用顺序如下：  
++ 1.`getDerivedStateFromProps()`在调用`render`方法之前调用，并且在初始挂载及后续更新时都会被调用。根据`shouldComponentUpdate()`的返回值判断，判断`React`的输出是否受当前`state`或`props`的影响。  
++ 2.`shouldComponentUpdate()`当`props`或`state`发生变化时，`shouldComponentUpdate()`会在渲染之前被调用。   
++ 3.`render()`:`render()`方法是`class`组件中唯一必须实现的方法。   
++ 4.`getSnapshotBeforeUpdate()`在最近一次渲染输出(提交到DOM节点)之前调用。  
++ 5.`componentDidUpdate()`在更新后会被立即调用   
+
+`render`方法是`class`组件中唯一必须实现的方法。  
+
+**卸载阶段**  当组件从`DOM`中移除时会调用如下方法：  
++ `componentWillUnmount()`在组件卸载及销毁之前调用。
+
 ## 组件的生命周期   
 每个组件都包含"生命周期方法"，你可以重写这些方法，以便于在运行过程中特定的阶段执行这些方法。  
 [React.Component 生命周期](https://react.docschina.org/docs/react-component.html)

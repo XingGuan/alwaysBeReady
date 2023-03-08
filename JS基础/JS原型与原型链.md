@@ -114,7 +114,7 @@ JavaScript 默认并不会复制对象的属性，相反，JavaScript 只是在�
 
 `fo.__proto__ === Foo.prototype`
 
-
+[轻松理解JS 原型原型链](https://juejin.cn/post/6844903989088092174)
 [参考文档1](https://www.jianshu.com/p/be7c95714586)
 [参考文档2](https://segmentfault.com/a/1190000017183101)
 

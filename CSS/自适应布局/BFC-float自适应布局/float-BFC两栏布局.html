@@ -20,11 +20,13 @@
         .main{
             height: 600px;
             background-color: cadetblue;
-            margin-left: 200px;
+            /* margin-left: 200px; */
+            overflow: hidden;
         }
     </style>
 </head>
 <body>
+    <!-- 设置`overflow:hidden`会触发块级格式化上下文，具有`BFC`特性的元素可以看做是隔离了的独立容器，容器里面的元素不会在布局上影响外面的元素。触发了`BFC`的元素仍然保持流体特性，也就是说BFC元素虽然不与浮动交集，自动退避浮动元素的宽度距离，但本身作为普通元素的流体特性依然存在，反映在布局上就是`自动填满除去浮动内容以外的剩余空间。` -->
     <div class="left"></div>
     <div class="main"></div>
 </body>

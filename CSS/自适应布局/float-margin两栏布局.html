@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>float-margin两栏布局</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+            background-color: cornsilk;
+        }
+        .left{
+            height: 400px;
+            width: 200px;
+            background-color: aquamarine;
+            float: left;
+        }
+        .main{
+            height: 600px;
+            background-color: cadetblue;
+            margin-left: 200px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 因为块级元素有流体特性，默认填充外部容器，因此只需要设置`margin`,不设置`width`也可以让内容填满剩余部分 -->
+    <div class="left"></div>
+    <div class="main"></div>
+</body>
+</html>
