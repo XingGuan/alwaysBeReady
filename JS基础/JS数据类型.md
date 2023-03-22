@@ -14,13 +14,13 @@
 ## JS数据类型
 JS数据类型包含值类型(基本类型)和引用数据类型两大类
 ### JS基本数据类型
-基本数据类型有6个  
+基本数据类型有7个  
 &emsp;1.字符串(String)  
 &emsp;2.数字(Number)  
 &emsp;3.布尔(Boolean)  
 &emsp;4.空(Null)  
 &emsp;5.未定义(Undefined)  
-&emsp;6.Symbol(Symbol)
+&emsp;6.Symbol(Symbol)  
 &emsp;7.BigInt(BigInt)
 >注:Symbol是ES6引入的一种新的原始类型数据，表示独一无二的值  。还有一个新增的`BigInt`。
 
@@ -64,9 +64,9 @@ BigInt|"bigint"
 Null| **"object"**
 Function对象(按照ECMA-262规范实现[[Call]])|"function"
 其他任何对象|"object"
-宿主对象(由JS环境提供)|取决于具体实现  
+宿主对象(由JS环境提供)|取决于具体实现   
 `//JavaScript诞生以来便如此
-typeof null==='object';`    
+typeof null==='object';`//true    
 
 在JavaScript最初的实现中，javaScript中的值是由一个表示类型的标签和实际数据值表示的。对象的标签是0，typeof null 也因此返回"object"。  
 注意：
