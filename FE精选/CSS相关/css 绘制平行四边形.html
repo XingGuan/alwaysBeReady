@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS 绘制平行四边形</title>
+    <style>
+        .polygon-box-active {
+            width: 192px;
+            height: 65px;
+            background-color: antiquewhite;
+            background-image: url("./react_Bg.png");
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            background-position: center;
+            clip-path: polygon(0px 0px, 8px 65px, 192px 65px, 184px 0px);
+        }
+    </style>
+</head>
+<body>
+    <div class="polygon-box-active" id="polygon-box"></div>
+    <script>
+        document.getElementById("polygon-box").onclick = function () {
+            console.log('aaaaaaaaaaaaaaa');
+        }
+    </script>
+</body>
+</html>

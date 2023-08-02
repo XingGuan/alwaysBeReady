@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .button {
+      background-image: linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%);
+      width: 100px;
+      height: 30px;
+      text-align: center;
+      transform: skewX(-45deg);
+      border-radius: 6px;
+    }
+
+    .button>div {
+      color: white;
+      height: 30px;
+      line-height: 30px;
+      transform: skewX(45deg);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="yolo" class="button">
+    <div>Click me</div>
+  </div>
+  <script>
+    document.getElementById("yolo").onclick = () => {
+      console.log('111111111111');
+    }
+  </script>
+</body>
+
+</html>
