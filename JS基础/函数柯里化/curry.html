@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>curry</title>
+</head>
+<body>
+    <div>curry</div>
+    <script>
+        /* 1.普通多参数函数 */
+        // 这是一个接受3个参数的函数
+        const add = function (x, y, z) {
+            return x + y + z
+        }
+        const result = add(1, 2, 3);
+        console.log('result', result);
+        /* 2.初级变换 */
+        const curryingAdd = function (x) {
+            console.log('2----', x)
+            return function (y, z) {
+                console.log('内部----', x, y, z)
+                return x + y + z;
+            }
+        }
+        // 调用方式   
+        /* 第一次调用 */
+        const invoke2 = curryingAdd(1);
+        console.log('invoke2', invoke2);
+
+
+        // 第一次调用curryingAdd(1)输出结果
+        // 2----1
+        // invoke2 ƒ(y, z) {
+        //     console.log('内部----', x, y, z)
+        //     return x + y + z;
+        // }
+
+        /* 第二次调用 */
+        const invoke22 = invoke2(2);
+        const invoke23 = invoke2(3);
+        console.log('invoke22', invoke22);
+        console.log('invoke23', invoke23);
+        /* 这里调用方式等价于invoke2(2)(3) */
+        // const invoke24 = invoke2(2);
+        // console.log('invoke24', invoke24);
+        // const invoke25 = invoke24(3);
+
+        // 调用输出结果
+        // 内部---- 1 2 undefined
+        // 内部---- 1 3 undefined
+        // 内部---- 1 2 undefined
+        // Uncaught TypeError: invoke2(...) is not a function
+
+        /* 第三次调用 */
+        const invokeDefault = invoke2(2, 3);
+        console.log('invokeDefault', invokeDefault);
+        // 内部----1 2 3
+        // invokeDefault 6
+        
+    </script>
+</body>
+</html>
