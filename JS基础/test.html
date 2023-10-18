@@ -7,11 +7,82 @@
 </head>
 <body>
     <script>
-        console.log("global", global);
-        console.log("getName", getName);
-        var global = 1;
-        console.log("global-2", global);
-        function getName() { }
+        /* 变量提升 */
+        // console.log("global", global);
+        // console.log("getName", getName);
+        // var global = 1;
+        // console.log("global-2", global);
+        // function getName() { }
+        /* 实现new函数 */
+        // function _new(constructor, ...arg) {
+        //     let obj = {}; //对应于上面的步骤1  
+        //     console.log("constructor", constructor);
+        //     console.log("constructor.prototype", constructor.prototype);
+        //     obj.__proto__ = constructor.prototype; //对应于上面步骤2
+
+        //     let res = constructor.apply(obj, arg); //对应于上面步骤3
+        //     console.log("res", res);
+        //     console.log("obj", obj);
+
+        //     return Object.prototype.toString.call(res) === '[object object]' ? res : obj; //对应于上面的步骤4  
+        // }
+        // const Fun = function (name) {
+        //     this.name = name;
+        // }
+        // console.log('result',_new(Fun, 'xyy'));
+        /* 箭头函数与普通函数对比*/
+        // this.id = "global";
+        // console.log("this.id :>>", this.id); //this.id：>> global   
+        // function normalFun() {
+        //     return this.id;
+        // }
+        // const arrowFun = () => {
+        //     return this.id;
+        // }
+        // const newNormal = new normalFun();
+        // console.log("newNormal :>>", newNormal);
+        // // newNormal :>> normalFun {}
+        // try {
+        //     const newArrow = new arrowFun();
+        // } catch (error) {
+        //     console.log("error：>>", error);
+        //     //error：>> TypeError: arrowFun is not a constructor
+        // }
+
+        // console.log("normalFun :>> ", normalFun()); // normalFun :>>  undefined
+        // console.log("arrowFun() :>> ", arrowFun()); // arrowFun() :>>  global
+        // const obj = {
+        //     id: "objId",
+        //     normalFun,
+        //     arrowFun,
+        // };
+        // const normalFunBindObj = normalFun.bind(obj);
+        // const arrowFunBindObj = arrowFun.bind(obj);
+        // console.log("normalFun.call(obj) :>> ", normalFun.call(obj)); // normalFun.call(obj) :>>  objId
+        // console.log("normalFunBindObj() :>> ", normalFunBindObj()); // normalFunBindObj() :>>  objId
+        // console.log("arrowFun.call(obj) :>> :>> ", arrowFun.call(obj)); // arrowFun.call(obj) :>> :>>  global
+        // console.log("arrowFunBindObj() :>> ", arrowFunBindObj()); // arrowFunBindObj() :>>  global
+        // console.log("obj.normalFun() :>> ", obj.normalFun()); // obj.normalFun() :>>  objId
+        // console.log("obj.arrowFun() :>> ", obj.arrowFun()); // obj.arrowFun() :>>  global
+        /* 对象实现for of 遍历 */
+        const obj = {
+            a: 1,
+            b: 2,
+            c: 3
+        }
+        Object.prototype[Symbol.iterator] = function value() {
+            console.log("this-------", this,Object(this));
+            const keys = Object.keys(Object(this));
+            let nextIndex = 0;
+            function next() {
+                return nextIndex < keys.length ? { value: [keys[nextIndex], obj[keys[nextIndex++]]], done: false } : { value: undefined, done: true };
+            }
+            return { next }
+        }
+        for (const [key, value] in obj) { 
+            console.log('key----', key);
+            console.log('value----', value);
+        }
     </script>
 </body>
 </html>

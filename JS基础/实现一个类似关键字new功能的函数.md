@@ -108,5 +108,53 @@ var car2 = new Car("Nissan", "300ZX", 1992, ken);
 ```javascript
     car2.owner.name;
 ```
+### `new`运算符总结  
+`new`运算符创建一个用户定义的对象类型的实例或具有构造函数的内置对象的实例。`new`关键字会进行如下的操作：  
+1.创建一个空的简单`JavaScript`对象(即`{}`)。   
+2.链接该对象(即设置该对象的构造函数)到另一个对象；(通俗理解就是新对象隐式原型`__proto__`链接到构造函数显式原型`prototype`上)。   
+3.将步骤1新创建的对象作为`this`的上下文；(实际是执行了构造函数并将构造函数的作用域指向新对象)。  
+4.如果该函数没有返回对象，则返回`this`。(实际是返回一个空对象，`new Object()`就是返回一个空对象`{}`)。  
+**实现一个类似关键字`new`功能的函数编码**
+```javascript
+    function _new(constructor,...arg){
+        let obj = {}; //对应于上面的步骤1  
+        obj.__proto__ = constructor.prototype; //对应于上面步骤2
+        let res = constructor.apply(obj,arg); //对应于上面步骤3
+        return Object.prototype.toString.call(res) === '[object object]'? res:obj; //对应于上面的步骤4  
+    }
+    const Fun = function(name){
+        this.name = name;
+    }
+    console.log(_new(Fun,'gx'));
+```
+### `hasOwnProperty()`   
+[hasOwnProperty MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwnProperty)  
+[hasOwnProperty 方法详解](https://blog.csdn.net/a791226606/article/details/110679991)   
+
+`Object.prototype.hasOwnProperty()`
+`hasOwnProperty()`方法返回一个布尔值 `return Boolean`;
+> 表示对象自有属性(而不是继承来的属性)中是否有指定的属性。
+
+### 语法  
+```javascript
+hasOwnProperty(prop)
+```  
+### 参数  
+`prop`  
+要测试的属性的字符串名称或者`symbol`;   
+
+### 返回值  
+如果对象有指定属性作为自有属性，则返回`true`;否则返回`false`。   
+
+### 描述  
+如果指定的属性是对象的直接属性——即使值为`null`或`undefined`，`hasOwnProperty()`方法也会返回`true`。
+> 如果属性是继承的，或者根本没有该属性，则该方法返回`false`。与`in`运算符不同的是，该方法不会在对象的原型链中检查指定属性。
+### `Object.property.toString().call()`的功能   
+[`Object.property.toString().call(obj)`功能及原理](https://blog.csdn.net/hanyanshuo/article/details/104620122)   
+`Object.property.toString().call(obj)` 可用于类型检测输出结果 `[object Object]`  
+
+
+
+
 
 
