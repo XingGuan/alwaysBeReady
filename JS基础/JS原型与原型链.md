@@ -114,35 +114,7 @@ JavaScript 默认并不会复制对象的属性，相反，JavaScript 只是在�
 
 `fo.__proto__ === Foo.prototype`   
 
-### 内置的可迭代对象  
-`String`、`Array`、`TypedArray`、`Map`、`Set`以及`Intl.Segments`都是内置的可迭代对象，因为它们的每个`prototype`对象都实现了`@@iterator`方法。   
-> 此外，`arguments`对象和一些`DOM`集合类型，如`NodeList`也是可迭代的。目前，没有内置的异步可迭代对象。   
 
-生成器函数返回生成器对象，它们是可迭代的迭代器。异步生成器函数返回异步生成器对象，它们是异步可迭代的迭代器。   
-从内置迭代返回的迭代器实际上都继承了一个公共类(目前尚未暴露)，该类实现了上述`[Symbol.iterator](){ return this; }`方法，使它们都是可迭代的迭代器。将来，除了迭代器协议要求的`next()`方法外，这些内置迭代器可能还有其他`辅助方法`。   
-```javascript
-console.log([][Symbol.iterator]());   
-Array Iterator{}   
-  [[Prototype]]: Array Iterator     ==> This is the prototype shared by all array iterators
-    next: ƒ next()
-    Symbol(Symbol.toStringTag): "Array Iterator"
-    [[Prototype]]: Object           ==> This is the prototype shared by all built-in iterators
-      Symbol(Symbol.iterator): ƒ [Symbol.iterator]()
-      [[Prototype]]: Object         ==> This is Object.prototype
-```
-接受可迭代对象的内置`API`  
-有许多`API`接受可迭代对象。一些例子，包括：    
-+ `Map()`  
-+ `WeakMap()`  
-+ `Set()`  
-+ `WeakSet()`  
-+ `Promise.all()`  
-+ `Promise.allSettled()`  
-+ `Promise.race()`  
-+ `Promise.any()`  
-+ `Array.from()`
-+ `object.groupBy()`  
-+ `Map.groupBy()`   
 
 
 
