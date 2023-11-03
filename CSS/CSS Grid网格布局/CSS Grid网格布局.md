@@ -56,6 +56,10 @@
 ```  
 上面代码指定`div`是一个行内元素，该元素内部采用网格布局。  
 ![avatar][grid行内布局]    
+这是`display:inline-grid;`的效果   
+
+> 注意:设为网格布局以后，容器子元素(项目)的`float`、`display:inline-block`、`display:table-cell`、`vertical-align`和`column-*`等设置都将失效。  
+
 
 
 
