@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./vconsole.min.js"></script>
+    <script>
+        let vConsole = new VConsole();
+    </script>
+</head>
+<body>
+    <video id="videoRef" width="320" height="240" x5-video-player-type="h5" webkit-playsinline="true"
+        x-webkit-airplay="true" playsinline="true" x5-video-player-fullscreen="true" style="border:1px solid #ccc;"
+        autoplay loop controls>
+        <source src="test.mp4" type="video/mp4">
+        您的浏览器不支持Video标签。
+    </video>
+    <script>
+        function doPlay() {
+            WeixinJSBridge.invoke('getNetworkType', {}, function (e) {
+                const video = document.getElementById("videoRef");
+                video.play()
+            })
+        }
+
+        if (window.WeixinJSBridge) {
+            doPlay()
+        } else {
+            document.addEventListener("WeixinJSBridgeReady", function () {
+                doPlay()
+            }, false);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>swiper叠加轮播图</title>
+</head>
+<body>
+    <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 外层容器 */
+        .swiper {
+            width: 1310px;
+            height: 482px;
+        }
+
+        .swiper-wrapper {
+            width: 1216px;
+            height: 482px;
+        }
+
+        /* 轮播项 */
+        .swiper .swiper-slide {
+            /* width: 387px; */
+            height: 482px;
+            font-size: 32px;
+            font-weight: 500;
+            color: #000;
+            /* 文字垂直居中 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* opacity: 0.5 !important; */
+        }
+
+        .swiper .swiper-slide-active {
+            /* opacity: 1 !important; */
+        }
+
+
+        /* 色彩来源：https://color.uisdc.com/ */
+        .swiper .swiper-slide-1 {
+            /* background-color: #425066; */
+            background-color: #9d2933;
+        }
+
+        .swiper .swiper-slide-2 {
+            /* background-color: #b88ed6; */
+            background-color: #9d2933;
+        }
+
+        .swiper .swiper-slide-3 {
+            background-color: #9d2933;
+        }
+
+        .swiper .swiper-slide-4 {
+            /* background-color: #003371; */
+            background-color: #9d2933;
+        }
+
+        .swiper .swiper-slide-5 {
+            background-color: #4c8dae;
+        }
+
+        .swiper .swiper-slide-6 {
+            background-color: #72db09;
+        }
+
+        .swiper .swiper-slide-7 {
+            background-color: #f72905;
+        }
+
+        .swiper .swiper-slide-8 {
+            background-color: #03a8fb;
+        }
+
+        .swiper .swiper-slide-9 {
+            background-color: #9803fb;
+        }
+
+        /* .swiper-slide:not(.swiper-slide-active) {opacity: .4 !important;} */
+
+        /* .swiper-button-prev {
+            width: 34px;
+            height: 34px;
+            background: url("./img/prev.png") no-repeat;
+            background-size: 100% 100%;
+        }
+        .swiper-button-next {
+            width: 34px;
+            height: 34px;
+            background: url("./img/next.png") no-repeat;
+            background-size: 100% 100%;
+        }
+         去除默认的操作按钮样式
+        .swiper-button-next:after,
+        .swiper-button-prev:after {
+            display: none;
+        } */
+    </style>
+    <div class="swiper">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide swiper-slide-1">1</div>
+            <div class="swiper-slide swiper-slide-2">2</div>
+            <div class="swiper-slide swiper-slide-3">3</div>
+            <div class="swiper-slide swiper-slide-4">4</div>
+            <!-- <div class="swiper-slide swiper-slide-5">5</div>
+            <div class="swiper-slide swiper-slide-6">6</div>
+            <div class="swiper-slide swiper-slide-7">7</div>
+            <div class="swiper-slide swiper-slide-8">8</div>
+            <div class="swiper-slide swiper-slide-9">9</div> -->
+        </div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+    </div>
+    <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
+    <script>
+        const swiper = new Swiper('.swiper', {
+            // initialSlide: Math.floor(9 / 2), 
+            //默认第几个在中心位置显示，总数量中间的一个，计算
+            initialSlide: 2,
+            autoplay: false,
+            // autoplay: {
+            //     delay: 1000,
+            //     disableOnInteraction: false,
+            // },
+            // 容器能够显示的slide数量，可以用来调节中间slide占比大小（为了达到设计图的尺寸），
+            // slide不能固定宽度，会影响滑动效果，所以这里用比例调节
+            slidesPerView: "3",
+            // slidesPerView: "auto", 
+            // 每个slide的宽度：外层容器 1310 / slidesPerView = 387
+            // 当前active的slide居中-最前面的大图
+            centeredSlides: true,
+            effect: "creative",
+            loop: true,
+            grabCursor: true,
+            creativeEffect: {
+                prev: {
+                    translate: ['-42%', 0, 0], // 偏移量
+                    origin: "center center",
+                    scale: 0.85, // 缩放量
+                    opacity: 0.8,
+                    shadow: true, // 是否加阴影
+                },
+                next: {
+                    translate: ['42%', 0, 0],
+                    origin: "center center",
+                    scale: 0.85,
+                    opacity: 0.8,
+                    shadow: true,
+                },
+                // limitProgress: Math.floor(9 / 2), 
+                limitProgress: 2, // 显示五个堆叠的最重要的这个属性，后面依次以前面属性等比配置
+                shadowPerProgress: true, //是否等比配置透明度
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
+        // 监听改变事件
+        swiper.on('slideChange', (e) => {
+            console.log(e.realIndex);
+        });
+    </script>
+</body>
+</html>
