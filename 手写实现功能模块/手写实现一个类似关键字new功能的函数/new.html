@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>new 功能的函数</title>
+</head>
+<body>
+    <script>
+        /* 要实现一个类似new操作符的函数，我们首先来分析一下new关键字都干了些什么 */
+        function Person(name, age) {
+            this.name = name;
+            this.age = age;
+        }
+        Person.prototype.sayName = function () {
+            console.log('this.name-----', this.name);
+        }
+        let p = new Person('zhangsan', 18);
+        console.log('p:>>', p);
+        /* p:>> 
+            Person {name: 'zhangsan', age: 18}
+                age
+                : 
+                18
+                name
+                : 
+                "zhangsan"
+                [[Prototype]]
+                : 
+                Object
+                sayName
+                : 
+                ƒ ()
+                constructor
+                : 
+                ƒ Person(name, age)
+                [[Prototype]]
+                : 
+                Object
+         */
+    </script>
+</body>
+</html>
