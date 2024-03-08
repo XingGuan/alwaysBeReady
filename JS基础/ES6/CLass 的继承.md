@@ -127,7 +127,11 @@ B._proto_ === A //true
 B.prototype._proto_  === A.prototype //true
 
 ```
-这两条继承链可以这么理解：作为一个对象，子类`B`的原型(_proto_属性)是父类`A`;作为一个构造函数，子类(`B`)的原型对象(`prototype`属性)是父类的原型对象(prototype属性)的实例。   
+这两条继承链可以这么理解：作为一个对象，子类`B`的原型(_proto_属性)是父类`A`;作为一个构造函数，子类(`B`)的原型对象(`prototype`属性)是父类的原型对象(prototype属性)的实例。  
+
+#### 拓展  
+> `Object.setPrototypeOf()`静态方法可以将一个指定对象的原型(即内部的`[[Prototype]]`属性)设置为另一个对象或者`null`。   
+
 
 ### 6实例的_proto_属性
 子类实例的`_proto_`属性的`_proto_`属性，指向父类实例的`_proto_`属性。也就是说，子类的原型的原型是父类的原型。  
@@ -151,5 +155,7 @@ p1.printName() // "Ha"
 + Error()
 + Object()
 
+#### 拓展  
+> `Object.getOwnPropertyNames()`静态方法返回一个数组，其包含给定对象中所有自有属性(包括不可枚举属性，但不包括使用`symbol`值作为名称的属性)。
 ### 8.Mixin模式的实现
 
