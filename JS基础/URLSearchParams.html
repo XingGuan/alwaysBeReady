@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const url = new URL(window.location.href);
+        const params = new URLSearchParams(url.search);
+        console.log('url----------', url);
+        console.log('params----------', params);
+        console.log('params get--------', params.get('username'));
+        console.log('params entries ----------', params.entries())
+        console.log('Object fromEntries ----------', Object.fromEntries(params.entries()))
+
+        const urlParams = window.location.search;
+        console.log('search----------', urlParams);
+        // 正则表达式匹配参数  
+        const regex = /[?&]([^=#]+)=([^&#]*)/g;
+        const paramsObject = {};
+        const regexGroup = regex.exec(urlParams);
+        console.log('regexGroup',regexGroup);
+        let match;
+        while((match = regex.exec(urlParams)) !== null){
+            paramsObject[decodeURIComponent(match[1])] = decodeURIComponent(match[2]);
+        }
+        // 获取单个参数值   
+        const paramValue = paramsObject['username'];
+        
+
+    </script>
+</body>
+</html>
