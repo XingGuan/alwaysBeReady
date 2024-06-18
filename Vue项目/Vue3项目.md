@@ -186,3 +186,5 @@ npm install --save crypto-js
 
 #### 8.修改`vue-router`路由  
 
+#### 9.`vite`兼容低版本浏览器  
+引入`legacy`  
