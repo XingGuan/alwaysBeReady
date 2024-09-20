@@ -221,7 +221,17 @@ import { dirname } from "node:path"
 > `Pinia`其目的是设计一个拥有组合式`API`的`Vue`状态管理库。
 
 #### `Pinia`使用  
-
+1.安装`Pinia`  
+2.创建一个`pinia`实例(根`store`)并将其传递给应用：  
+```javascript
+import { createApp } from 'vue'
+import { createPinia } from 'pinia'
+import App from './App.vue'
+const pinia = createPinia();
+const app = createApp(App);
+app.use(pinia);
+app.mount('#app');
+```
 
 
 #### 7.引入`axios`封装并处理请求  
