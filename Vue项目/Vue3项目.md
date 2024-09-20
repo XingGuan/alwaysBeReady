@@ -54,19 +54,62 @@ npm run build
     open: env.BROWSER // 开发服务器启动时，是否自动在浏览器中打开应用程序  
     proxy:{
       "^/v1/.*":{
-        target: 'http://172.16.108.106',
+        target: 'http://xxx.xx.xxx.xxx',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/v1/, ''),
       }
     }, // 为开发服务器配置自定义代理规则
   }
+```
++ 让项目启动时打开指定浏览器   
+```javascript
+  server: {
+      host: env.VITE_HOST,
+      port: env.VITE_PORT,
+      open: `http://${env.VITE_IP}:${env.VITE_PORT}`, // 指定 IP 地址和端口
+      proxy: {
+        "^/v1/.*": {
+          target: 'http://xxx.xx.xxx.xxx',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/v1/, ''),
+        }
+      }, // 为开发服务器配置自定义代理规则
+    }
+```
+在 `.env` 中添加环境变量配置  
+```javascript
+VITE_HOST = 0.0.0.0
+VITE_PORT = 9999
+VITE_IP = xxx.xx.xxx.xxx
+VITE_OPEN = true
+BROWSER = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'
 ```  
+添加在`vite.config.js`中引入环境变量的配置  
+```javascript
+export default ({ mode }) => {
+  const env = loadEnv(mode, process.cwd());
+})
+```
+解决 eslint 报错 `process is not defined`
+在`.eslintrc.js`中添加`node`支持  
+```javascript
+  env: {
+    browser: true,
+    node: true // 添加对 Node.js 环境的支持
+  },
+```
+  
+
+  
 + `alias`别名配置
 ```javascript
   resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
         assets: "@/assets",
+        utils: "@/utils",
+        api: "@/api",
+        store: "@/store",
       }
   },
 ```
@@ -134,6 +177,9 @@ npm install autoprefixer -D
 + 引入`vant 4`  
 [vant 安装](https://vant-contrib.gitee.io/vant/#/zh-CN/quickstart)  
 
+`vant`安装涉及一些组件全局导入或是组件通过插件局部导入的问题   
+[思否问答，vue3，vite，vant4，组件显示不出来，都是按照官方文档配置的？怎么解决？](https://segmentfault.com/q/1010000045287084)
+
 #### 5.引入`CSS`预处理器`Less`  
 + 安装
 > npm install less -D   
@@ -142,6 +188,8 @@ npm install autoprefixer -D
 
 在`src/assets`目录下添加**全局样式**文件`global.less`。  
 配置在`vite.config.js`中加载  
+
+项目安装的时候已经集成了`less`暂时未安装额外插件,待确认
 ```javascript
 import { fileURLToPath, URL } from 'node:url'
 import { dirname } from "node:path"
@@ -165,6 +213,14 @@ import { dirname } from "node:path"
 #### 6.利用`pinia`,创建`store` 
 
 > 项目初始化时已引入`pinia`  
+
+[pinia官方文档](https://pinia.vuejs.org/zh/introduction.html)  
+
+> `Pinia`其目的是为`Vue3`的`Vuex`提供替代品，`Vuex`在`Vue3`中已经不再推荐使用，`pinia`是`Vue3`官方推荐使用的状态管理库。  
+
+> `Pinia`其目的是设计一个拥有组合式`API`的`Vue`状态管理库。
+
+#### `Pinia`使用  
 
 
 

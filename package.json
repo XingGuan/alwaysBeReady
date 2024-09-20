@@ -4,6 +4,7 @@
   "description": "alwaysBeReady\r 前端知识点分类总结",
   "main": "Node.js",
   "dependencies": {
+    "@vue/cli": "^5.0.8",
     "callapp-lib": "^3.5.0",
     "postcss-cli": "^10.0.0",
     "terser": "^5.15.0",
