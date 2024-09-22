@@ -1,10 +1,17 @@
+<!--
+ * @Descripttion: 
+ * @Author: GXing
+ * @Date: 2023-08-04 22:43:54
+-->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>curry</title>
 </head>
+
 <body>
     <div>curry</div>
     <script>
@@ -57,7 +64,34 @@
         console.log('invokeDefault', invokeDefault);
         // 内部----1 2 3
         // invokeDefault 6
-        
+
+        /* 第二次改写 */
+        console.log("------第二次改写------")
+        const currying = function (x) {
+            console.log('x---', x);
+            return function (y) {
+                console.log('xy---', x, y);
+                return function (z) {
+                    console.log('xyz---', x, y, z);
+                    return x + y + z;
+                }
+            }
+        }
+        /* 第一次调用 */
+        const currying1 = currying(1);
+        console.log('currying1', currying1);
+
+        /* 第二次调用 */
+        const currying2 = currying1(2, 3);
+        console.log('currying2', currying2);
+        /* 第三次嗲用 */
+        const currying3 = currying1(2);
+        console.log('currying3', currying3);
+        /* 第四次调用 */
+        const currying4 = currying3(3);
+        console.log('currying4', currying4);
+
     </script>
 </body>
+
 </html>
