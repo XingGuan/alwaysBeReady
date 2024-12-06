@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>双倍元素无限循环</title>
+    <style>
+        .wrapper {
+            --logo-width: 200px;
+            --logo-height: 100px;
+            --gap: calc(var(--logo-width) / 14);
+            --duration: 60s;
+            --scroll-start: 0;
+            --scroll-end: calc(-100% - var(--gap));
+
+            display: flex;
+            flex-direction: column;
+            gap: var(--gap);
+            margin: auto;
+            max-width: 100vw;
+        }
+
+        .marquee {
+            display: flex;
+            overflow: hidden;
+            user-select: none;
+            gap: var(--gap);
+            mask-image: linear-gradient(to right,
+                    hsl(0 0% 0% / 0),
+                    hsl(0 0% 0% / 1) 20%,
+                    hsl(0 0% 0% / 1) 80%,
+                    hsl(0 0% 0% / 0));
+        }
+
+        .marquee__group {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            gap: var(--gap);
+            min-width: 100%;
+            animation: scrollLeft var(--duration) linear infinite;
+        }
+
+        .wrapper .marquee:nth-child(even) {
+            margin-left: calc(var(--logo-width) / -2);
+        }
+
+        .item {
+            width: var(--logo-width);
+            height: var(--logo-height);
+            background-color: red;
+            border-radius: 6px;
+        }
+
+        @keyframes scrollLeft {
+            from {
+                transform: translateX(var(--scroll-start));
+            }
+
+            to {
+                transform: translateX(var(--scroll-end));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="marquee">
+            <div class="marquee__group">
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+            </div>
+            <div class="marquee__group">
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+            </div>
+        </div>
+        <!-- <div class="marquee">
+            <div class="marquee__group">
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+            </div>
+            <div class="marquee__group" aria-hidden="true">
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+            </div>
+        </div> -->
+    </div>
+</body>
+</html>
