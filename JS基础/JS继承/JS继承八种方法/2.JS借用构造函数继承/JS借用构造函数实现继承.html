@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript</title>
+</head>
+
+<body>
+    <script>
+        function Parent(name) {
+            this.name = name;//实例基本属性 （强调私有，不共享）  
+            this.arr = [1];//实例引用属性 （强调私有，不共享）
+            this.say = function () { //实例方法，强调复用，需要共享
+                console.log('hello');
+            }
+        }
+        function Child(name, like) {
+            Parent.call(this, name);//核心 拷贝了父类的实例属性和方法   
+            this.like = like;
+        }
+        let boy1 = new Child('小红', 'apple');
+        let boy2 = new Child('小明', 'orange');
+        console.log('子类实例', boy1, boy2);
+        // 优点1：可向父类构造函数传参   
+        console.log('父类实例基本属性 name', boy1.name, boy2.name); //小红 小明  
+        // 优点2：不共享父类构造函数的引用属性   
+        boy1.arr.push(2);
+        console.log('父类实例引用类型属性', boy1.arr, boy2.arr); //[1,2] [1]  
+
+        // 缺点1:方法不能复用   
+        console.log('父类实例方法 say', boy1.say == boy2.say); //false 说明，boy1和boy2的方法是独立，不是共享的   
+        //缺点2：不能继承父类原型上的方法    
+        Parent.prototype.walk = function () { //在父类的原型对象上定义个walk方法
+            console.log('我会走路');
+            return '我会走路';
+        }
+
+        console.log('子类上调用父类原型上的方法',boy1.walk); // undefined (说明实例，不能获得父类原型上的方法)
+
+
+
+    </script>
+</body>
+
+</html>

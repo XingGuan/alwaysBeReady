@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebDataRocks</title>
+</head>
+<body>
+    <div id="wdr-component"></div>
+    <!-- <link href="https://cdn.webdatarocks.com/latest/webdatarocks.min.css" rel="stylesheet" /> -->
+    <!-- <link rel="stylesheet" type="text/css" href="./webdatarocks-1.4.12/theme/green/webdatarocks.min.css"/> -->
+    <!-- <link rel="stylesheet" type="text/css" href="./webdatarocks.min.css"/> -->
+    <link rel="stylesheet" type="text/css" href="./webdatarocks-1.4.12/theme/custom/webdatarocks.css" />
+    <script src="https://cdn.webdatarocks.com/latest/webdatarocks.toolbar.min.js"></script>
+    <script src="https://cdn.webdatarocks.com/latest/webdatarocks.js"></script>
+    <script>
+        var pivot = new WebDataRocks({
+            container: "#wdr-component",
+            toolbar: true,
+            report: {
+                dataSource: {
+                    filename: "https://cdn.webdatarocks.com/data/data.csv"
+                },
+                // localization: "https://cdn.webdatarocks.com/loc/zh.json"
+                localization: "./zh.json"
+            }
+        });
+    </script>
+</body>
+</html>

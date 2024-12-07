@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css">
+    <script src="https://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script src="./hybridappNew.js"></script>
+    <script src="./vconsole.min.js"></script>
+    <script>
+        let vConsole = new VConsole();
+    </script>
+</head>
+<body>
+
+    <div id="app">
+        <div @click="openApp" style="margin-top: 150px;">
+            {{ message }}
+        </div>
+        <div @click="increment">{{count}}</div>
+
+        <div data-role="page" id="pageone">
+            <div data-role="header">
+                <h1 @click="increment" style="margin-top: 150px;">头部文本</h1>
+            </div>
+
+            <div data-role="main" class="ui-content">
+                <p>页面一</p>
+                <a href="#pagetwo">跳转到页面二</a>
+            </div>
+
+            <div data-role="footer">
+                <h1 @click="openApp">底部文本</h1>
+            </div>
+        </div>
+
+        <div data-role="page" id="pagetwo">
+            <div data-role="header">
+                <h1 @click="increment" style="margin-top: 150px;">头部文本</h1>
+            </div>
+
+            <div data-role="main" class="ui-content">
+                <p>页面二</p>
+                <a href="#pageone">跳转到页面一</a>
+            </div>
+
+            <div data-role="footer">
+                <h1 @click="openApp">底部文本</h1>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp, ref } = Vue
+
+        createApp({
+            setup() {
+                // 组件逻辑
+                // 此处声明一些响应式状态
+                const message = ref('ngnix!')
+                const count = ref(0)
+
+                window.addEventListener('pagehide',function () {
+                    console.log("----------------");
+                    localStorage.setItem("name", "XX");
+                })
+                $(document).on("pagehide", "#pagetwo", function () {
+                    alert("pagehide  事件触发 - 页面二隐藏");
+                    localStorage.setItem("name", "XX");
+                });
+
+                function openApp() {
+                    console.log('ssssssssss');
+                    openBestvPlus();
+
+                }
+
+                function increment(e) {
+                    //更新组件状态
+                    count.value++
+                    console.log('setGG');
+                    localStorage.setItem("name", "GG");
+                    // localStorage.setItem("name", "GG");
+                    // if (count.value < 5) {
+                    // localStorage.removeItem("name")
+
+                    // localStorage.clear();//清空所有的存储数据
+                    // localStorage.setItem("name", "GG");
+                    // } else {
+                    // localStorage.setItem("name", "XX");
+                    // }
+                }
+
+
+                return {
+                    // 暴露给模板
+                    message,
+                    count,
+                    increment,
+                    openApp
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+</html>

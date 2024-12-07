@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript</title>
+</head>
+
+<body>
+    <script>
+        function Parent(name) {
+            this.name = name; //实例基本属性，强调私有不共享
+            this.arr = [1];//实例引用属性，强调私有不共享
+        }
+        /* ---需要复用，共享的方法定义在父类原型上 */
+        Parent.prototype.say = function () {
+            // console.log("hello");
+            return 'hello';
+        }
+        function Child(name, like) {
+            Parent.call(this, name); //核心 第一次
+            this.like = like;
+        }
+
+
+
+
+
+        // Child.prototype = new Parent(); // 核心 第二次  
+        // Child.prototype.constructor = Child;   //修正constructor指向   
+        /*修复开始  注意：这种方式也要修复构造函数的*/
+        // Child.prototype = Parent.prototype; //核心 子类原型和父类原型，实质上是同一个  
+        /* 核心 通过创建中间对象，子类原型和父类原型就会隔开。不是同一个啦，有效避免了方式4的缺点 */
+        Child.prototype = Object.create(Parent.prototype);
+
+
+        <!-- 这里是修复构造函数指向的代码--->
+
+        // 修复构造函数指向的代码  
+        Child.prototype.constructor = Child;
+
+
+        let boy1 = new Child('小红', 'apple');
+        let boy2 = new Child('小明', 'orange');
+        let p = new Parent('小爸爸');
+        console.log('boy1', boy1);
+        console.log('boy2', boy2);
+        console.log(p);
+          /* 修复之前 */
+        console.log('子类实例构造函数', boy1.constructor);   //parent
+        console.log('父类实例构造函数', p.constructor); //parent
+
+        /* 修复之后 */
+        console.log('子类实例构造函数', boy1.constructor);   //Child
+        console.log('父类实例构造函数', p.constructor); //parent
+
+    </script>
+</body>
+
+</html>
