@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>无限循环滚动动画</title>
+    <style>
+        .row1 {
+            margin-top: 5rem;
+        }
+        .row2{
+            margin-top: 10px;
+        }
+
+        .wrapper {
+            --logo-width: 200px;
+            --logo-height: 100px;
+            --logo-count: 8;
+            --duration: 30s;
+            width: 90%;
+            max-width: 1200px;
+            margin-inline: auto;
+            position: relative;
+            height: var(--logo-height);
+            overflow: hidden;
+            /* 模糊遮挡效果 */
+            mask-image: linear-gradient(to right,
+                    rgba(0, 0, 0, 0),
+                    rgba(0, 0, 0, 1) 20%,
+                    rgba(0, 0, 0, 1) 80%,
+                    rgba(0, 0, 0, 0));
+        }
+
+        @keyframes scrollLeft {
+            to {
+                left: calc(var(--logo-width) * -1);
+            }
+        }
+
+        .item {
+            width: var(--logo-width);
+            height: var(--logo-height);
+            background-color: red;
+            border-radius: 6px;
+            position: absolute;
+            left: calc(var(--logo-width) * var(--logo-count));
+            animation-name: scrollLeft;
+            animation-duration: var(--duration);
+            animation-timing-function: linear;
+            /* animation-iteration-count: 1; */
+            animation-iteration-count: infinite;
+            /* 动态计算出每个logo的动画延时 */
+            animation-delay: calc(var(--duration) / var(--logo-count) * (var(--logo-count) - var(--count)) * -1);
+        }
+        /* .row2 .item {
+            margin-left: 30px;
+        } */
+        
+    </style>
+</head>
+<body>
+    <div class="wrapper row1">
+        <div class="item" style="--count: 1"></div>
+        <div class="item" style="--count: 2"></div>
+        <div class="item" style="--count: 3"></div>
+        <div class="item" style="--count: 4"></div>
+        <div class="item" style="--count: 5"></div>
+        <div class="item" style="--count: 6"></div>
+        <div class="item" style="--count: 7"></div>
+        <div class="item" style="--count: 8"></div>
+    </div>
+    <!-- <div class="wrapper row2">
+        <div class="item" style="--count: 1"></div>
+        <div class="item" style="--count: 2"></div>
+        <div class="item" style="--count: 3"></div>
+        <div class="item" style="--count: 4"></div>
+        <div class="item" style="--count: 5"></div>
+        <div class="item" style="--count: 6"></div>
+        <div class="item" style="--count: 7"></div>
+        <div class="item" style="--count: 8"></div>
+    </div> -->
+    <script>
+        
+    </script>
+</body>
+</html>

@@ -250,7 +250,10 @@ npm install --save js-md5
 npm install --save crypto-js
 ```
 
-#### 8.修改`vue-router`路由  
+#### 8.修改`index.html`中的引入文件
+> 注意：`public`文件 下的文件可以在 `index.html`中直接引用，且在打包的时候，会被打包进入`dist`文件夹下
 
-#### 9.`vite`兼容低版本浏览器  
+#### 9.修改`vue-router`路由  
+
+#### 10.`vite`兼容低版本浏览器  
 引入`legacy`  
