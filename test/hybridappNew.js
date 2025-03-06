@@ -1,16 +1,12 @@
 var bridge
-var bestvPlus
+var xxxxxPlus
 
 window.onload = function () {
-  if (bestvPlus) {
+  if (xxxxxPlus) {
     if (bridgeInitFinish) {
       bridgeInitFinish()
     }
   }
-  //微信二次分享
-  // if (isWeixin()) {
-  // getSign()
-  // }
 
   setupWebViewJavascriptBridge(function (_bridge) {
     bridge = _bridge
@@ -47,11 +43,11 @@ function isWeixin() {
 function isQQ() {
   return navigator.userAgent.toLowerCase().includes("qqtheme")
 }
-function isBestv() {
+function isxxxxx() {
   // 本地测试时开启return true，提交时关闭
   console.log('%c [ navigator.userAgent.toLowerCase() ]-50', 'font-size:13px; background:pink; color:#bf2c9f;', navigator.userAgent.toLowerCase())
   // return true;
-  return navigator.userAgent.toLowerCase().includes("bestvplus")
+  return navigator.userAgent.toLowerCase().includes("xxxxxPlus")
 }
 
 function setupWebViewJavascriptBridge(callback) {
@@ -74,7 +70,7 @@ function setupWebViewJavascriptBridge(callback) {
 //打开app
 //在app内打开H5页面
 //isAppHome---打开app首页，而不是打开当前页面
-function openBestvPlus(webUrl = window.location.href, isAppHome = false) {
+function openxxxxxPlus(webUrl = window.location.href, isAppHome = false) {
   console.log("------webUrl", webUrl)
 
   let u = navigator.userAgent
@@ -82,22 +78,22 @@ function openBestvPlus(webUrl = window.location.href, isAppHome = false) {
   let isAndroid = u.indexOf("Android") > -1 || u.indexOf("Linux") > -1 //android终端
   let isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) //IOS终端
   if (isAndroid) {
-    let param = `bestvplus://?&type=h5&webUrl=` + encodeURIComponent(webUrl)
-    let jumpUrl = `https://a.app.qq.com/o/simple.jsp?pkgname=com.bestv.app&android_schema=${encodeURIComponent(param)}`
-    if (isAppHome) jumpUrl = "https://a.app.qq.com/o/simple.jsp?pkgname=com.bestv.app&android_schema=bestvplus://"
+    let param = `xxxxxPlus://?&type=h5&webUrl=` + encodeURIComponent(webUrl)
+    let jumpUrl = `https://a.app.qq.com/o/simple.jsp?pkgname=com.xxxxx.app&android_schema=${encodeURIComponent(param)}`
+    if (isAppHome) jumpUrl = "https://a.app.qq.com/o/simple.jsp?pkgname=com.xxxxx.app&android_schema=xxxxxPlus://"
     console.log("isAndroid jumpUrl", jumpUrl)
     window.location.href = jumpUrl
   } else {
     let param = "?{\"type\":\"h5\",\"webUrl\":\"" + webUrl + "\"}"
-    let jumpUrl = "https://app.bestv.cn" + param
-    if (isAppHome) jumpUrl = "https://app.bestv.cn"
+    let jumpUrl = "https://app.xxxxx.cn" + param
+    if (isAppHome) jumpUrl = "https://app.xxxxx.cn"
     console.log("Note isAndroid jumpUrl", jumpUrl)
     window.location = jumpUrl
   }
 }
 
-function isBestvIOS() {
-  return navigator.userAgent.toLowerCase().includes("bestvplus ios")
+function isxxxxxIOS() {
+  return navigator.userAgent.toLowerCase().includes("xxxxxPlus ios")
 }
 
 function sendData2Objc(data, callback) {
@@ -115,13 +111,13 @@ function sendData2Objc(data, callback) {
 
 //获取登录用户Json信息
 function getUserInfoJson(callback) {
-  console.log('bestvPlus', bestvPlus)
-  if (bestvPlus) {
-    console.log('bestvPlus', getUserInfoJson)
-    let val = bestvPlus.getUserInfoJson()
+  console.log('xxxxxPlus', xxxxxPlus)
+  if (xxxxxPlus) {
+    console.log('xxxxxPlus', getUserInfoJson)
+    let val = xxxxxPlus.getUserInfoJson()
     callback(val)
-  } else if (isBestvIOS()) {
-    console.log('isBestvIOS')
+  } else if (isxxxxxIOS()) {
+    console.log('isxxxxxIOS')
     let data = {
       "cmd": "getUserInfoJson"
     }
@@ -135,9 +131,9 @@ function getUserInfoJson(callback) {
 
 //跳转登录页面 参数等于1时会关闭H5,等于0时不会关闭当前H5
 function tokeninvalid(force = 1) {
-  if (bestvPlus) {
-    let val = bestvPlus.tokeninvalid(JSON.stringify(force));
-  } else if (isBestvIOS()) {
+  if (xxxxxPlus) {
+    let val = xxxxxPlus.tokeninvalid(JSON.stringify(force));
+  } else if (isxxxxxIOS()) {
     let data = {
       "cmd": "tokeninvalid",
       "force": `${force}`
@@ -148,9 +144,9 @@ function tokeninvalid(force = 1) {
 
 //分享页面
 function sharePage(data) {
-  if (bestvPlus) {
-    bestvPlus.sharePage(JSON.stringify(data))
-  } else if (isBestvIOS()) {
+  if (xxxxxPlus) {
+    xxxxxPlus.sharePage(JSON.stringify(data))
+  } else if (isxxxxxIOS()) {
     sendData2Objc(data, null)
   } else {
     console.log('h5')
@@ -163,16 +159,16 @@ function sharePage(data) {
 // clearHistory  清除历史
 function clearHistory(url) {
   console.info('clearHistory--------------', url);
-  if (bestvPlus) {
+  if (xxxxxPlus) {
     console.info('clearHistory==============');
     if (url) {
       console.info('url-----------------', url);
-      bestvPlus.clearHistory(url);
+      xxxxxPlus.clearHistory(url);
     } else {
-      bestvPlus.clearHistory();
+      xxxxxPlus.clearHistory();
     }
-  } else if (isBestvIOS()) {
-    console.log('isBestvIOS');
+  } else if (isxxxxxIOS()) {
+    console.log('isxxxxxIOS');
     let data = {
       "cmd": "clearHistory"
     }
@@ -187,8 +183,8 @@ function clearHistory(url) {
 
 // clearHistory  清除历史 ios返回清除
 function goBackHistory(status) {
-  if (isBestvIOS()) {
-    console.log('isBestvIOS');
+  if (isxxxxxIOS()) {
+    console.log('isxxxxxIOS');
     let data = {
       "cmd": "goBackHistory",
       "isHomePage": `${status}`
