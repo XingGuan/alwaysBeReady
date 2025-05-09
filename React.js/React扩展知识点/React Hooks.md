@@ -14,6 +14,10 @@
 
 > `hooks`一律使用`use`前缀命名：`useXxx`      
 
+###### `Hooks`的本质   
++ 一类特殊的函数，为你的函数式组件(`functional component`)注入特殊的功能。   
+
+`React`为什么要创建`Hooks`这个概念？  
 
 
 

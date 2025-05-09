@@ -38,7 +38,11 @@
 `JS`调用栈采用的是后进先出的规则，当函数执行的时候，会被添加到栈的顶部，当执行栈执行完成后，就会从栈顶移出，直到栈内被清空。   
 
 ### 同步任务和异步任务   
-`JavaScript`单线程任务被分为**同步任务**和**异步任务**,同步任务会在调用栈中按照顺序等待主线程依次执行，异步任务会在异步任务有了结果后，将注册的回调函数放入任务队列中等待主线程空闲的时候(调用栈被清空)，被读取到栈内等待主线程的执行。   
+`JavaScript`单线程任务被分为**同步任务**和**异步任务(宏任务和微任务)**,同步任务会在调用栈中按照顺序等待主线程依次执行，异步任务会在异步任务有了结果后，将注册的回调函数放入任务队列中等待主线程空闲的时候(调用栈被清空)，被读取到栈内等待主线程的执行。  
+
+> 回调注册阶段是宏任务，但回调执行时微任务。   
+
+
 
 ![alt text](./img/image-4.png)  
 
@@ -139,4 +143,141 @@ console.log('script end')
 
 ### `pending callbacks`  
 此阶段执行某些系统操作(`例如TCP`错误类型)的回调。例如，如果`TCP socket econnrefused`在尝试`connect`时`receives`,则某些`*nix`系统希望等待报告错误。这将在`pending callbacks`阶段执行。   
+
+### `poll`  
+**该`poll`阶段有两个主要功能**：   
++ 执行`I/O`回调。   
++ 处理轮询队列中的事件。   
+
+**当事件循环进入`poll`阶段并且在`timers`中没有可以执行定时器时，将发生以下两种情况之一**  
++ 如果`poll`队列不为空，则事件循环将遍历其同步执行它们的`callback`队列，直到队列为空，或者达到`system-dependent`(系统相关限制了)。
+**如果`pull`队列为空，则会发生以下两种情况之一**  
++ 如果有`setImmediate()`回调需要执行，则会立即执行`poll`阶段并进入执行`check`阶段以执行回调。
++ 如果没有`setImmediate()`回调需要执行，`poll`阶段将等待`callback`被添加到队列中，然后立即执行。  
+
+**当然设定了`timer`的话且`poll`队列为空，则会判断是否有`timer`超时，如果有的话会回到`timer`阶段执行回调**  
+`check`  
+**此阶段允许人员在`poll`阶段完成后立即执行回调。**  
+如果`poll`阶段闲置并且`script`已排队`setImmediate()`,则事件循环到达`check`阶段执行而不是继续等待。   
+
+`setImmediate()`实际上是一个特殊的计时器，它在事件循环的一个单独阶段运行。它使用`libuv``API`来调度在`poll`阶段完成后执行的回调。   
+通常，当代码被执行时，事件循环最终将达到`poll`阶段，它将等待传入连接，请求等。   
+但是，如果已经调度了回调`setImmediate()`，并且轮询阶段变为空闲，则它将结束并且达到`check`阶段，而不是等待`poll`事件。   
+```javascript
+console.log('start');
+setTimeout(()=>{
+  console.log('timer1');
+  Promise.resolve().then(function(){
+    console.log('promise1');
+  })
+},0);
+setTimeout(()=>{
+  console.log('timer2');
+  Promise.resolve().then(function(){
+    console.log('promise2');
+  })
+},0);
+Promise.resolve().then(function(){
+  console.log('promise3');
+})
+console.log('end');
+```  
+如果`node`版本为`v11.x`， 其结果与浏览器一致。  
+```javascript
+start
+end
+promise3
+timer1
+timer2
+promise1
+promise2
+```  
+如果`v10`版本上述结果存在两种情况：   
++ 如果`time2`定时器已经在执行队列中了，那么执行结果与上面结果相同。  
++ 如果`time2`定时器没有在执行队列中，执行结果为：   
+```javascript
+start
+end
+promise3
+timer1
+promise1
+timer2
+```  
+ 
+![alt text](./img/image-10.gif);   
+
+### `setImmediate()`和`setTimeout()`的区别  
+**`setImmediate()`和`setTimeout()`是相似的，但根据它们被调用的时间以不同的方式表现。**  
++ `setImmediate()`设计用于在当前`poll`阶段完成后`check`阶段执行脚本。   
++ `setTimeout()`安排在经过最小`(ms)`后运行的脚本，在`timers`阶段执行。    
+
+**eg：**  
+```javascript
+setTimeout(()=>{
+  console.log('timeout');
+},0);
+setImmediate(()=>{
+  console.log('immediate');
+})
+```    
+执行定时器的顺序将根据调用它们的上下文而有所不同。如果从主模块中调用两者，那么时间将受到进程性能的限制。   
+
+其结果也不一样   
+如果在`I/O`周期内移动两个调用，则始终首先执行立即回调：   
+```javascript
+const fs = require('fs');   
+fs.readFile(_filename,()=>{
+  setTimeout(()=>{
+    console.log('timeout');
+  },0)
+  setImmediate(()=>{
+    console.log('immediate');
+  })
+})
+```  
+其结果确定一定是`immediate`=>`timeout`   
+主要原因是在`I/O`阶段读取文件后，事件循环会先进入`poll`阶段，发现有`setImmediate`需要执行，会立即进入`check`阶段执行`setImmediate`的回调。  
+然后再进入`timers`阶段，执行`setTimeout`，打印`timeout`。  
+
+![alt text](./img/image-11.png);   
+
+### `Process.nextTick()`  
+`process.nextTick()`虽然它是异步`API`的一部分，但未在图中显示。这是因为`process.nextTick()`从技术上讲，它不是事件循环的一部分。   
++ `process.nextTick()`方法将`callback`添加到`next tick`队列，一旦当前事件轮询队列的任务全部完成，在`next tick`队列中的所有`callbacks`会被依次调用。  
+
+**换种理解方式：**  
++ 当每个阶段完成后，如果存在`nextTick`队列，就会清空队列中的所有回调函数，并且优先于其他`microtask`执行。  
+
+**eg:**  
+```javascript
+let bar;
+setTimeout(()=>{
+  console.log('setTimeout');
+},0);
+setImmediate(()=>{
+  console.log('setImmediate');
+})
+function someAsyncApiCall(callback){
+  process.nextTick(callback);
+}
+someAsyncApiCall(()=>{
+  console.log('bar',bar); //1
+})
+bar = 1;
+```  
+在`NodeV10`中上述代码执行可能有两种答案，一种为：  
+```javascript
+bar 1
+setTimeout
+setImmediate
+```  
+另一种为： 
+```javascript
+bar 1
+setImmediate
+setTimeout
+```  
+无论哪种，始终都是先执行`process.nextTick(callback)` ,打印`bar 1`。
+
+
 
