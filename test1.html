@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Scanner Fix</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+    .render-box {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .render {
+        position: relative;
+        width: 300px;
+        height: 300px;
+        border: 2px dashed #fff;
+        border-radius: 8px;
+        z-index: 10;
+    }
+
+    /* 重写html5-qrcode的默认样式 */
+    #render video {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        border-radius: 6px;
+    }
+
+    #render canvas {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        border-radius: 6px;
+    }
+
+    /* 隐藏默认的扫描框 */
+    #render__scan_region {
+        display: none !important;
+    }
+
+    /* 隐藏默认的控制按钮 */
+    #render__camera_selection,
+    #render__camera_permission_button,
+    #render__scan_region_highlight_img,
+    #render__dashboard,
+    #render__dashboard_section,
+    #render__dashboard_section_csr {
+        display: none !important;
+    }
+
+    /* 自定义扫描提示 */
+    .scan-hint {
+        position: absolute;
+        bottom: -50px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #fff;
+        font-size: 14px;
+        text-align: center;
+        opacity: 0.8;
+    }
+
+    /* 扫描动画 */
+    .scan-line {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #00ff00, transparent);
+        animation: scan 2s linear infinite;
+    }
+
+    @keyframes scan {
+        0% {
+            transform: translateY(0);
+        }
+        100% {
+            transform: translateY(296px);
+        }
+    }
+
+    /* 四个角的装饰 */
+    .corner {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #00ff00;
+    }
+
+    .corner.top-left {
+        top: -2px;
+        left: -2px;
+        border-right: none;
+        border-bottom: none;
+    }
+
+    .corner.top-right {
+        top: -2px;
+        right: -2px;
+        border-left: none;
+        border-bottom: none;
+    }
+
+    .corner.bottom-left {
+        bottom: -2px;
+        left: -2px;
+        border-right: none;
+        border-top: none;
+    }
+
+    .corner.bottom-right {
+        bottom: -2px;
+        right: -2px;
+        border-left: none;
+        border-top: none;
+    }
+
+    /* 控制按钮 */
+    .controls {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+        z-index: 20;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+
+    .btn:disabled {
+        background-color: #6c757d;
+        cursor: not-allowed;
+    }
+
+    /* 结果显示 */
+    .result {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        right: 20px;
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 10px;
+        border-radius: 5px;
+        display: none;
+        z-index: 30;
+    }
+
+    .result.show {
+        display: block;
+    }
+</style>
+
+</head>
+<body>
+    <div class="render-box">
+        <div class="render" id="render">
+            <!-- 扫描线动画 -->
+            <div class="scan-line"></div>
+
+        <!-- 四个角的装饰 -->
+        <div class="corner top-left"></div>
+        <div class="corner top-right"></div>
+        <div class="corner bottom-left"></div>
+        <div class="corner bottom-right"></div>
+        
+        <!-- 扫描提示 -->
+        <div class="scan-hint">请将二维码放入扫描框内</div>
+    </div>
+    
+    <!-- 扫描结果 -->
+    <div class="result" id="result">
+        <strong>扫描结果：</strong>
+        <span id="resultText"></span>
+    </div>
+    
+    <!-- 控制按钮 -->
+    <div class="controls">
+        <button class="btn" id="startBtn">开始扫描</button>
+        <button class="btn" id="stopBtn" disabled>停止扫描</button>
+    </div>
+</div>
+
+<script>
+    let scanner = null;
+    let isScanning = false;
+    
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const resultDiv = document.getElementById('result');
+    const resultText = document.getElementById('resultText');
+    
+    // 扫描成功回调
+    function qrCodeSuccessCallback(decodedText, decodedResult) {
+        console.log('扫描成功:', decodedText);
+        resultText.textContent = decodedText;
+        resultDiv.classList.add('show');
+        
+        // 3秒后隐藏结果
+        setTimeout(() => {
+            resultDiv.classList.remove('show');
+        }, 3000);
+    }
+    
+    // 扫描失败回调
+    function qrCodeErrorCallback(error) {
+        // 静默处理错误，避免控制台污染
+    }
+    
+    // 开始扫描
+    async function startScanning() {
+        try {
+            if (!scanner) {
+                scanner = new Html5Qrcode("render");
+            }
+            
+            const config = {
+                fps: 10,
+                qrbox: { width: 250, height: 250 },
+                aspectRatio: 1.0,
+                supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA]
+            };
+            
+            await scanner.start(
+                { facingMode: "environment" },
+                config,
+                qrCodeSuccessCallback,
+                qrCodeErrorCallback
+            );
+            
+            isScanning = true;
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            
+            console.log('扫描器启动成功');
+        } catch (err) {
+            console.error('启动扫描器失败:', err);
+            alert('启动扫描器失败: ' + err.message);
+        }
+    }
+    
+    // 停止扫描
+    async function stopScanning() {
+        try {
+            if (scanner && isScanning) {
+                await scanner.stop();
+                isScanning = false;
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+                console.log('扫描器已停止');
+            }
+        } catch (err) {
+            console.error('停止扫描器失败:', err);
+        }
+    }
+    
+    // 事件监听
+    startBtn.addEventListener('click', startScanning);
+    stopBtn.addEventListener('click', stopScanning);
+    
+    // 页面卸载时清理
+    window.addEventListener('beforeunload', () => {
+        if (scanner && isScanning) {
+            scanner.stop();
+        }
+    });
+    
+    // 自动开始扫描
+    document.addEventListener('DOMContentLoaded', () => {
+        // 可以在这里自动开始扫描
+        // startScanning();
+    });
+</script>
+
+</body>
+</html>
