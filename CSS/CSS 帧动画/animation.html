@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS帧动画替代GIF方案</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            max-width: 800px;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 25px;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            max-width: 1200px;
+        }
+
+        .animation-demo {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .demo-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .animation-container {
+            width: 300px;
+            height: 300px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            position: relative;
+            background: #2c3e50;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 风扇旋转动画 */
+        .fan-animation {
+            width: 100%;
+            height: 100%;
+            background: url('https://assets.codepen.io/21542/fan-sprites.png') 0 0 no-repeat;
+            background-size: 2400px 300px;
+            animation: fan 0.6s steps(7) infinite;
+        }
+
+        @keyframes fan {
+            from {
+                background-position: 0 0;
+            }
+
+            to {
+                background-position: -2400px 0;
+            }
+        }
+
+        /* 跳动的心动画 */
+        .heart-animation {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .heart {
+            font-size: 180px;
+            color: #e74c3c;
+            animation: heartbeat 1.2s infinite;
+            text-shadow: 0 0 20px rgba(231, 76, 60, 0.7);
+            line-height: 1;
+        }
+
+        @keyframes heartbeat {
+            0% {
+                transform: scale(1);
+            }
+
+            15% {
+                transform: scale(1.3);
+            }
+
+            30% {
+                transform: scale(1);
+            }
+
+            45% {
+                transform: scale(1.3);
+            }
+
+            60% {
+                transform: scale(1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .code-example {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .code-example h3 {
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        pre {
+            background: #2d3436;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+
+        .info {
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .info h2 {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .advantages {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .advantage {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .advantage h3 {
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .animation-demo {
+                width: 100%;
+                max-width: 500px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>CSS帧动画替代GIF方案</h1>
+        <p class="subtitle">使用CSS动画和静态图片序列创建高性能动画效果</p>
+    </header>
+
+    <div class="container">
+        <div class="animation-demo">
+            <h2 class="demo-title">示例1: 旋转风扇</h2>
+            <div class="animation-container">
+                <div class="fan-animation" id="fan"></div>
+            </div>
+            <div class="controls">
+                <button onclick="playAnimation('fan')">播放</button>
+                <button onclick="pauseAnimation('fan')">暂停</button>
+                <button onclick="resetAnimation('fan')">重置</button>
+            </div>
+            <div class="code-example">
+                <h3>实现原理</h3>
+                <pre>/* 雪碧图动画关键帧 */
+@keyframes fan {
+    from { background-position: 0 0; }
+    to { background-position: -2400px 0; }
+}
+
+.fan-animation {
+    animation: fan 0.6s steps(7) infinite;
+}</pre>
+            </div>
+        </div>
+
+        <div class="animation-demo">
+            <h2 class="demo-title">示例2: 跳动的心</h2>
+            <div class="animation-container">
+                <div class="heart-animation">
+                    <div class="heart" id="heart">❤️</div>
+                </div>
+            </div>
+            <div class="controls">
+                <button onclick="playAnimation('heart')">播放</button>
+                <button onclick="pauseAnimation('heart')">暂停</button>
+                <button onclick="resetAnimation('heart')">重置</button>
+            </div>
+            <div class="code-example">
+                <h3>实现原理</h3>
+                <pre>/* 变形动画关键帧 */
+@keyframes heartbeat {
+    0% { transform: scale(1); }
+    15% { transform: scale(1.3); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.3); }
+    60% { transform: scale(1); }
+    100% { transform: scale(1); }
+}
+
+.heart {
+    animation: heartbeat 1.2s infinite;
+}</pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="info">
+        <h2>为什么使用CSS动画替代GIF？</h2>
+        <div class="advantages">
+            <div class="advantage">
+                <h3>更好的性能</h3>
+                <p>CSS动画由浏览器GPU优化，比GIF占用更少的内存和CPU资源</p>
+            </div>
+            <div class="advantage">
+                <h3>更小的文件体积</h3>
+                <p>使用雪碧图比完整GIF文件体积更小，加载更快</p>
+            </div>
+            <div class="advantage">
+                <h3>完全可控</h3>
+                <p>可以轻松控制动画播放、暂停、速度、方向等</p>
+            </div>
+            <div class="advantage">
+                <h3>更高品质</h3>
+                <p>CSS动画支持更高的帧率和分辨率，不会出现GIF的色彩限制</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function playAnimation(elementId) {
+            const element = document.getElementById(elementId);
+            element.style.animationPlayState = 'running';
+        }
+
+        function pauseAnimation(elementId) {
+            const element = document.getElementById(elementId);
+            element.style.animationPlayState = 'paused';
+        }
+
+        function resetAnimation(elementId) {
+            const element = document.getElementById(elementId);
+            // 先暂停动画
+            element.style.animationPlayState = 'paused';
+            // 触发重绘
+            void element.offsetWidth;
+            // 重新启动动画
+            element.style.animationPlayState = 'running';
+        }
+    </script>
+</body>
+</html>

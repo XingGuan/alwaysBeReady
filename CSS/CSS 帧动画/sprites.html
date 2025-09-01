@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS雪碧图动画原理解析</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .explanation {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+        
+        .animation-container {
+            width: 300px;
+            height: 300px;
+            margin: 0 auto 25px;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            background: #2c3e50;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 2px solid #fff;
+        }
+        
+        /* 风扇旋转动画 */
+        .fan-animation {
+            width: 100%;
+            height: 100%;
+            background: url('https://assets.codepen.io/21542/fan-sprites.png') 0 0 no-repeat;
+            background-size: 2400px 300px;
+            animation: fan 0.6s steps(7) infinite;
+        }
+        
+        @keyframes fan {
+            from { background-position: 0 0; }
+            to { background-position: -2400px 0; }
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .code-breakdown {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .code-breakdown h2 {
+            margin-bottom: 15px;
+            color: #3498db;
+        }
+        
+        pre {
+            background: #2d3436;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+        
+        .visual-explanation {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .sprite-sheet {
+            width: 300px;
+            height: auto;
+            border: 2px solid #fff;
+            border-radius: 8px;
+        }
+        
+        .frame {
+            width: 100px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .frame img {
+            width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .advantages {
+            margin-top: 30px;
+        }
+        
+        .advantages h2 {
+            margin-bottom: 15px;
+            color: #3498db;
+        }
+        
+        .advantages ul {
+            list-style-position: inside;
+            padding-left: 20px;
+        }
+        
+        .advantages li {
+            margin-bottom: 10px;
+            padding-left: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            button {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CSS雪碧图动画原理解析</h1>
+        
+        <div class="explanation">
+            <p>下面的示例展示了如何使用CSS雪碧图创建逐帧动画。雪碧图是一张包含多个动画帧的图像，通过改变<code>background-position</code>属性来显示不同的帧。</p>
+        </div>
+        
+        <div class="animation-container">
+            <div class="fan-animation" id="fan"></div>
+        </div>
+        
+        <div class="controls">
+            <button onclick="playAnimation('fan')">播放动画</button>
+            <button onclick="pauseAnimation('fan')">暂停动画</button>
+            <button onclick="slowAnimation('fan')">减慢速度</button>
+            <button onclick="speedUpAnimation('fan')">加快速度</button>
+        </div>
+        
+        <div class="code-breakdown">
+            <h2>代码解析</h2>
+            <pre>.fan-animation {
+    width: 100%;
+    height: 100%;
+    background: url('https://assets.codepen.io/21542/fan-sprites.png') 0 0 no-repeat;
+    background-size: 2400px 300px;
+    animation: fan 0.6s steps(7) infinite;
+}
+
+@keyframes fan {
+    from { background-position: 0 0; }
+    to { background-position: -2400px 0; }
+}</pre>
+            
+            <p><strong>工作原理：</strong></p>
+            <ul>
+                <li><strong>雪碧图尺寸</strong>: 雪碧图总宽度为2400px，高度为300px，包含7个帧</li>
+                <li><strong>background-size</strong>: 设置背景图片尺寸与雪碧图实际尺寸相同</li>
+                <li><strong>steps(7)</strong>: 将动画分为7个步骤，每个步骤显示一帧</li>
+                <li><strong>background-position</strong>: 从0px移动到-2400px，横向移动整个雪碧图宽度</li>
+                <li><strong>动画时长</strong>: 0.6秒完成一个循环，每秒约11.67帧</li>
+            </ul>
+        </div>
+        
+        <div class="visual-explanation">
+            <div class="frame">
+                <h3>雪碧图</h3>
+                <img src="https://assets.codepen.io/21542/fan-sprites.png" alt="风扇雪碧图" class="sprite-sheet">
+                <p>包含7个帧的雪碧图</p>
+            </div>
+            
+            <div class="frame">
+                <h3>单个帧</h3>
+                <img src="https://assets.codepen.io/21542/fan-frame-1.png" alt="风扇帧示例">
+                <p>雪碧图中的单个帧</p>
+            </div>
+        </div>
+        
+        <div class="advantages">
+            <h2>雪碧图动画的优势</h2>
+            <ul>
+                <li><strong>减少HTTP请求</strong>: 多个图像合并为一个文件</li>
+                <li><strong>更好的性能</strong>: 比GIF更好的压缩和更小的文件大小</li>
+                <li><strong>完全控制</strong>: 可以控制动画速度、方向、循环次数等</li>
+                <li><strong>高质量显示</strong>: 可以支持视网膜显示屏和高分辨率设备</li>
+                <li><strong>CSS控制</strong>: 可以使用CSS控制动画状态（播放、暂停等）</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        let speed = 0.6;
+        
+        function playAnimation(elementId) {
+            const element = document.getElementById(elementId);
+            element.style.animationPlayState = 'running';
+        }
+        
+        function pauseAnimation(elementId) {
+            const element = document.getElementById(elementId);
+            element.style.animationPlayState = 'paused';
+        }
+        
+        function slowAnimation(elementId) {
+            const element = document.getElementById(elementId);
+            speed += 0.1;
+            element.style.animationDuration = speed + 's';
+        }
+        
+        function speedUpAnimation(elementId) {
+            const element = document.getElementById(elementId);
+            if (speed > 0.2) {
+                speed -= 0.1;
+                element.style.animationDuration = speed + 's';
+            }
+        }
+    </script>
+</body>
+</html>

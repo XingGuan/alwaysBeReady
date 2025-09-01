@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS多图帧动画实现方案</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #fff;
+            min-height: 100vh;
+            padding: 30px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto 25px;
+        }
+        
+        .comparison {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+        
+        .method {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            flex: 1;
+            min-width: 350px;
+            max-width: 550px;
+        }
+        
+        .method-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #3498db;
+        }
+        
+        .animation-container {
+            width: 300px;
+            height: 300px;
+            margin: 0 auto 25px;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            background: #2c3e50;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 2px solid #fff;
+        }
+        
+        /* 多张图片动画 */
+        .multi-image {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            animation: multiImage 2s steps(8) infinite;
+        }
+        
+        @keyframes multiImage {
+            0% { background-image: url('https://assets.codepen.io/21542/fan-frame-1.png'); }
+            12.5% { background-image: url('https://assets.codepen.io/21542/fan-frame-2.png'); }
+            25% { background-image: url('https://assets.codepen.io/21542/fan-frame-3.png'); }
+            37.5% { background-image: url('https://assets.codepen.io/21542/fan-frame-4.png'); }
+            50% { background-image: url('https://assets.codepen.io/21542/fan-frame-5.png'); }
+            62.5% { background-image: url('https://assets.codepen.io/21542/fan-frame-6.png'); }
+            75% { background-image: url('https://assets.codepen.io/21542/fan-frame-7.png'); }
+            87.5% { background-image: url('https://assets.codepen.io/21542/fan-frame-8.png'); }
+            100% { background-image: url('https://assets.codepen.io/21542/fan-frame-1.png'); }
+        }
+        
+        /* 雪碧图动画 */
+        .sprite-sheet {
+            width: 100%;
+            height: 100%;
+            background: url('https://assets.codepen.io/21542/fan-sprites.png') 0 0 no-repeat;
+            background-size: 2400px 300px;
+            animation: spriteSheet 0.8s steps(8) infinite;
+        }
+        
+        @keyframes spriteSheet {
+            from { background-position: 0 0; }
+            to { background-position: -2400px 0; }
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .code-example {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .code-example h3 {
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        pre {
+            background: #2d3436;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .comparison-table {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            margin-bottom: 40px;
+        }
+        
+        .comparison-table h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #3498db;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        th {
+            background: rgba(52, 152, 219, 0.3);
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .recommendation {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+        
+        .recommendation h2 {
+            color: #3498db;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .method {
+                width: 100%;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CSS多图帧动画实现方案</h1>
+            <p class="subtitle">比较使用多张独立图片和使用雪碧图实现CSS帧动画的两种方法</p>
+        </header>
+        
+        <div class="comparison">
+            <div class="method">
+                <h2 class="method-title">多张独立图片实现</h2>
+                <div class="animation-container">
+                    <div class="multi-image" id="multiImage"></div>
+                </div>
+                <div class="controls">
+                    <button onclick="playAnimation('multiImage')">播放</button>
+                    <button onclick="pauseAnimation('multiImage')">暂停</button>
+                    <button onclick="slowAnimation('multiImage')">减慢</button>
+                    <button onclick="speedUpAnimation('multiImage')">加速</button>
+                </div>
+                <div class="code-example">
+                    <h3>实现代码</h3>
+                    <pre>@keyframes multiImage {
+    0% { background-image: url('frame1.png'); }
+    12.5% { background-image: url('frame2.png'); }
+    25% { background-image: url('frame3.png'); }
+    /* 更多帧... */
+    100% { background-image: url('frame1.png'); }
+}
+
+.multi-image {
+    animation: multiImage 2s steps(8) infinite;
+}</pre>
+                </div>
+            </div>
+            
+            <div class="method">
+                <h2 class="method-title">雪碧图实现</h2>
+                <div class="animation-container">
+                    <div class="sprite-sheet" id="spriteSheet"></div>
+                </div>
+                <div class="controls">
+                    <button onclick="playAnimation('spriteSheet')">播放</button>
+                    <button onclick="pauseAnimation('spriteSheet')">暂停</button>
+                    <button onclick="slowAnimation('spriteSheet')">减慢</button>
+                    <button onclick="speedUpAnimation('spriteSheet')">加速</button>
+                </div>
+                <div class="code-example">
+                    <h3>实现代码</h3>
+                    <pre>@keyframes spriteSheet {
+    from { background-position: 0 0; }
+    to { background-position: -2400px 0; }
+}
+
+.sprite-sheet {
+    background: url('spritesheet.png') 0 0 no-repeat;
+    background-size: 2400px 300px;
+    animation: spriteSheet 0.8s steps(8) infinite;
+}</pre>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comparison-table">
+            <h2>方法比较</h2>
+            <table>
+                <tr>
+                    <th>特性</th>
+                    <th>多张独立图片</th>
+                    <th>雪碧图</th>
+                </tr>
+                <tr>
+                    <td>准备工作</td>
+                    <td>简单，无需处理图片</td>
+                    <td>需要合成雪碧图</td>
+                </tr>
+                <tr>
+                    <td>HTTP请求</td>
+                    <td>多请求（可能影响性能）</td>
+                    <td>单请求（性能较好）</td>
+                </tr>
+                <tr>
+                    <td>灵活性</td>
+                    <td>高，可随时替换单帧</td>
+                    <td>低，修改需重新生成雪碧图</td>
+                </tr>
+                <tr>
+                    <td>加载性能</td>
+                    <td>可能出现闪烁或延迟</td>
+                    <td>一次性加载，无闪烁</td>
+                </tr>
+                <tr>
+                    <td>文件大小</td>
+                    <td>可能更大（每张图片有头部信息）</td>
+                    <td>通常更小（单图优化更好）</td>
+                </tr>
+                <tr>
+                    <td>适用场景</td>
+                    <td>帧数少、需要频繁修改的情况</td>
+                    <td>帧数多、性能要求高的情况</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="recommendation">
+            <h2>推荐方案</h2>
+            <p>对于大多数情况，<strong>雪碧图方案性能更好</strong>，特别是当帧数较多时。</p>
+            <p>但对于快速原型开发或帧数较少的情况，使用多张独立图片更加方便灵活。</p>
+            <p>无论选择哪种方法，都可以通过CSS实现流畅的帧动画效果。</p>
+        </div>
+    </div>
+
+    <script>
+        let speeds = {
+            multiImage: 2,
+            spriteSheet: 0.8
+        };
+        
+        function playAnimation(elementId) {
+            const element = document.getElementById(elementId);
+            element.style.animationPlayState = 'running';
+        }
+        
+        function pauseAnimation(elementId) {
+            const element = document.getElementById(elementId);
+            element.style.animationPlayState = 'paused';
+        }
+        
+        function slowAnimation(elementId) {
+            const element = document.getElementById(elementId);
+            speeds[elementId] += 0.2;
+            element.style.animationDuration = speeds[elementId] + 's';
+        }
+        
+        function speedUpAnimation(elementId) {
+            const element = document.getElementById(elementId);
+            if (speeds[elementId] > 0.4) {
+                speeds[elementId] -= 0.2;
+                element.style.animationDuration = speeds[elementId] + 's';
+            }
+        }
+    </script>
+</body>
+</html>
