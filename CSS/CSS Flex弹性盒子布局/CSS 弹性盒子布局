@@ -1,2 +1,7 @@
 [CSS 弹性盒子布局阮一峰](https://www.ruanyifeng.com/blog/2015/07/flex-grammar.html)  
 
+> 实现页面布局的主要手段
+1.`Flexbox`（弹性盒子布局）  
+    + **一维布局**模型（沿主轴或交叉轴）。  
+    + 核心概念：容器(`display:flex`)和项目(`item`)。属性如`justify-content`,`align-items`,`flex-direction`,`flex-grow`,`flex-shrink`。   
+    + 为什么重要：解决垂直居中、等高分栏、弹性分配空间等传统`CSS`的痛点是轻而易举。是**组件级布局**的首选。
