@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>scrollIntoViewOptions - inline: 'nearest' 示例</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+        
+        .explanation {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .container {
+            width: 100%;
+            height: 300px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
+            background: #ecf0f1;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .item {
+            display: inline-block;
+            width: 200px;
+            height: 250px;
+            margin-right: 15px;
+            border-radius: 8px;
+            padding: 15px;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            position: relative;
+        }
+        
+        .target {
+            background: #e74c3c;
+            border: 3px solid #c0392b;
+        }
+        
+        .other {
+            background: #3498db;
+        }
+        
+        .viewport-indicator {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: calc(100% - 40px);
+            left: 20px;
+            border: 3px dashed #2c3e50;
+            pointer-events: none;
+        }
+        
+        .comparison {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .comparison-item {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .comparison-item h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        code {
+            background: #f8f9fa;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        
+        .highlight {
+            animation: highlight 2s ease;
+        }
+        
+        @keyframes highlight {
+            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+        }
+    </style>
+</head>
+<body>
+    <h1>scrollIntoViewOptions 中 inline: 'nearest' 的含义</h1>
+    
+    <div class="explanation">
+        <p><code>scrollIntoViewOptions</code> 中的 <code>inline</code> 属性控制元素在水平方向上的滚动行为。</p>
+        <p><code>inline: 'nearest'</code> 表示浏览器会根据元素相对于滚动容器的当前位置，以最小的滚动距离将元素滚动到视口中：</p>
+        <ul>
+            <li>如果元素已经在视口内，则不发生滚动</li>
+            <li>如果元素在视口左侧，则向右滚动直到元素可见</li>
+            <li>如果元素在视口右侧，则向左滚动直到元素可见</li>
+        </ul>
+    </div>
+    
+    <div class="controls">
+        <button onclick="scrollToElement('start')">inline: 'start'</button>
+        <button onclick="scrollToElement('center')">inline: 'center'</button>
+        <button onclick="scrollToElement('end')">inline: 'end'</button>
+        <button onclick="scrollToElement('nearest')">inline: 'nearest'</button>
+    </div>
+    
+    <div class="container" id="scrollContainer">
+        <div class="viewport-indicator"></div>
+        <div class="item other">项目 1</div>
+        <div class="item other">项目 2</div>
+        <div class="item other">项目 3</div>
+        <div class="item other">项目 4</div>
+        <div class="item target" id="targetElement">目标元素</div>
+        <div class="item other">项目 6</div>
+        <div class="item other">项目 7</div>
+        <div class="item other">项目 8</div>
+        <div class="item other">项目 9</div>
+        <div class="item other">项目 10</div>
+    </div>
+    
+    <div class="comparison">
+        <div class="comparison-item">
+            <h3>inline: 'start'</h3>
+            <p>元素与滚动容器的起始位置对齐</p>
+            <p><code>behavior: 'smooth', inline: 'start'</code></p>
+        </div>
+        
+        <div class="comparison-item">
+            <h3>inline: 'center'</h3>
+            <p>元素与滚动容器的中心位置对齐</p>
+            <p><code>behavior: 'smooth', inline: 'center'</code></p>
+        </div>
+        
+        <div class="comparison-item">
+            <h3>inline: 'end'</h3>
+            <p>元素与滚动容器的结束位置对齐</p>
+            <p><code>behavior: 'smooth', inline: 'end'</code></p>
+        </div>
+        
+        <div class="comparison-item">
+            <h3>inline: 'nearest'</h3>
+            <p>以最小的滚动距离将元素滚动到视口中</p>
+            <p><code>behavior: 'smooth', inline: 'nearest'</code></p>
+        </div>
+    </div>
+
+    <script>
+        function scrollToElement(inlineValue) {
+            const targetElement = document.getElementById('targetElement');
+            const container = document.getElementById('scrollContainer');
+            
+            // 首先将容器滚动到中间位置，以便演示nearest的效果
+            if (inlineValue === 'nearest') {
+                container.scrollLeft = container.scrollWidth / 3;
+            }
+            
+            // 添加高亮效果
+            targetElement.classList.remove('highlight');
+            void targetElement.offsetWidth; // 触发重排以重置动画
+            targetElement.classList.add('highlight');
+            
+            // 使用指定的inline值滚动到元素
+            targetElement.scrollIntoView({
+                behavior: 'smooth',
+                inline: inlineValue
+            });
+        }
+    </script>
+</body>
+</html>
