@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雪碧图动画修复</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .description {
+            max-width: 800px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            max-width: 1200px;
+        }
+        
+        .box {
+            width: 300px;
+            height: 300px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .box-header {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .loading-box {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        /* 修复后的动画 */
+        .loading {
+            width: 200px;
+            height: 200px;
+            background: url('https://via.placeholder.com/1000x1000/ff6b6b/ffffff?text=Sprite+Sheet') 0 0 no-repeat;
+            background-size: 500% 500%;
+            animation: spriteAnimation 3s steps(5) infinite;
+            border: 2px solid #fff;
+            border-radius: 10px;
+        }
+        
+        @keyframes spriteAnimation {
+            0% { background-position: 0% 0%; }
+            20% { background-position: 100% 0%; }
+            40% { background-position: 0% 25%; }
+            60% { background-position: 100% 25%; }
+            80% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+        
+        /* 对比：原问题动画 */
+        .loading-original {
+            width: 200px;
+            height: 200px;
+            background: url('https://via.placeholder.com/1000x1000/4ecdc4/ffffff?text=Sprite+Sheet') 0 0 no-repeat;
+            background-size: 500% 500%;
+            animation: originalAnimation 15s steps(24) infinite;
+            border: 2px solid #fff;
+            border-radius: 10px;
+        }
+        
+        @keyframes originalAnimation {
+            /* 第一行 */
+            0% { background-position: 0% 0%; }
+            4% { background-position: 25% 0%; }
+            8% { background-position: 50% 0%; }
+            12% { background-position: 75% 0%; }
+            16% { background-position: 100% 0%; }
+            
+            /* 第二行 */
+            20% { background-position: 0% 25%; }
+            24% { background-position: 25% 25%; }
+            28% { background-position: 50% 25%; }
+            32% { background-position: 75% 25%; }
+            36% { background-position: 100% 25%; }
+            
+            /* 第三行 */
+            40% { background-position: 0% 50%; }
+            44% { background-position: 25% 50%; }
+            48% { background-position: 50% 50%; }
+            52% { background-position: 75% 50%; }
+            56% { background-position: 100% 50%; }
+            
+            /* 第四行 */
+            60% { background-position: 0% 75%; }
+            64% { background-position: 25% 75%; }
+            68% { background-position: 50% 75%; }
+            72% { background-position: 75% 75%; }
+            76% { background-position: 100% 75%; }
+            
+            /* 第五行 */
+            80% { background-position: 0% 100%; }
+            84% { background-position: 25% 100%; }
+            88% { background-position: 50% 100%; }
+            92% { background-position: 75% 100%; }
+            96% { background-position: 100% 100%; }
+            
+            100% { background-position: 100% 100%; }
+        }
+        
+        .code-sample {
+            width: 100%;
+            max-width: 800px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        
+        pre {
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+        
+        .fix-highlight {
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+        
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>雪碧图动画修复演示</h1>
+        <div class="description">
+            <p>此页面演示了如何正确实现5x5雪碧图动画。左侧是修复后的流畅动画，右侧是原始有问题的动画。</p>
+            <p>主要问题：原始代码使用了<code>steps(24)</code>，但5x5雪碧图实际上需要5步水平x5步垂直，共25帧。修复后使用了正确的步数并优化了关键帧。</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="box">
+            <div class="box-header">修复后的动画</div>
+            <div class="loading-box">
+                <div class="loading"></div>
+            </div>
+        </div>
+        
+        <div class="box">
+            <div class="box-header">原始问题动画</div>
+            <div class="loading-box">
+                <div class="loading-original"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="code-sample">
+        <h2>修复后的关键代码</h2>
+        <pre><code>.loading {
+    width: 200px;
+    height: 200px;
+    background: url('sprite.png') 0 0 no-repeat;
+    background-size: 500% 500%;
+    <span class="fix-highlight">animation: spriteAnimation 3s steps(5) infinite;</span>
+}
+
+@keyframes spriteAnimation {
+    <span class="fix-highlight">0% { background-position: 0% 0%; }
+    20% { background-position: 100% 0%; }
+    40% { background-position: 0% 25%; }
+    60% { background-position: 100% 25%; }
+    80% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }</span>
+}</code></pre>
+    </div>
+    
+    <footer>
+        <p>© 2023 雪碧图动画修复演示 | 使用纯CSS实现</p>
+    </footer>
+</body>
+</html>

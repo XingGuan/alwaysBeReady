@@ -1,0 +1,128 @@
+### `CSS`变量(`Custom Properties`)  
+> `CSS`变量是一种允许你在一个地方定义特定的值，并在整个`CSS`文档中多次重复使用该值的方法。它们遵循类似于编程语言中变量的概念，极大地提升了`CSS`的可维护性和灵活性。  
+
++ **核心思想**：定义一个变量（例如 `--main-color`）并给它赋值（例如：`#3498db`）,然后在需要使用这个值的地方，通过`var()`函数来引用它。
++ **命名规则**：变量名必须以两个减号（`--`）开头，后面跟随你自定义的名称，例如`--primary-color`、`--font-size`、`--spacing-unit`。这是为了区分原生的`CSS`属性和自定义属性。  
++ **作用域**：变量可以在`:root`选择器（全局作用域）中定义，以便在整个文档中使用；也可以在特定的选择器（局部作用域）中定义，这样它的使用范围就被限制在该选择器及其子元素中。   
+
+### 为什么需要它？（解决了什么问题）  
+在`CSS`变量出现之前，我们通常使用`CSS`预处理器（如`Sass、Less`）的变量来达到类似目的。但原生的`CSS`变量有其独特的优势：  
+1.**无需编译**：浏览器原生支持，无需像`Sass`那样需要编译成普通的`CSS`。  
+2.**动态性**：可以在运行时通过`JavaScript`动态地读取、修改和添加，这使得实现主题切换、实时调整样式等功能变得非常简单。  
+3.**继承和级联**：它们遵循`CSS`的层叠和继承规则。这意味着你可以在局部作用域中重新定义变量的值，而不会影响全局。  
+4.**更好的兼容性**：随着现代浏览器的普及，`CSS`变量的兼容性已经非常好（`IE`除外）。   
+
+#### 使用方式  
+1.定义变量  
+使用自定义属性名，并以两个（`--`）开头。
+```css
+/*在:root 中定义全局变量*/   
+:root{
+    --primary-color:#3498db;
+    --secondary-color:#e74c3c;
+    --main-spacing:16px;
+    --main-font:'Helvetica', sans-serif;
+}
+/*在局部作用域中定义变量*/  
+.container{
+    --container-bg-color:#f0f0f0;
+    --border-radius:8px;
+}
+```  
+2.使用变量  
+使用`var()`函数来引用变量  
+```css
+.button {
+  /* 使用变量 */
+  background-color: var(--primary-color);
+  padding: var(--main-spacing);
+  font-family: var(--main-font);
+  border-radius: var(--border-radius, 4px); /* 提供备用值 */
+}
+
+.container {
+  background-color: var(--container-bg-color);
+  border-radius: var(--border-radius);
+}
+```  
++ 备用值（`Fallback Value`）: `var()`函数的第二个参数是备用值。如果引用的变量未定义或无效，浏览器将使用这个备用值。例如var(`--border-radius,4px`)。   
+3.通过`JavaScript`动态操作   
+这是`CSS`变量最强大的特性之一。  
+```javascript
+//获取根元素  
+const root = document.documentElement;  
+//获取一个CSS变量的值  
+let primaryColor = getComputedStyle(root).getPropertyValue('--primary-color').trim();
+console.log(primaryColor); //输出：#3498db
+// 设置一个新的值给`CSS`变量  
+root.style.setProperty('--primary-color','#ff0000'); // 将主色调改为红色   
+// 你也可以设置一个新的变量  
+root.style.setProperty('--new-size','20px');
+```  
+这使得实现像"暗黑模式/明亮模式"切换这样的功能变得异常简单：   
+```javascript
+function toggleTheme(isDark){
+    const root = document.documentElement;  
+    if(isDark){
+         root.style.setProperty('--bg-color', '#333');
+         root.style.setProperty('--text-color', '#fff');
+    }else{
+            root.style.setProperty('--bg-color', '#fff');
+            root.style.setProperty('--text-color', '#333');
+    }
+}
+```
+#### 一个完整的简单示例  
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    /* 定义全局变量 */
+    :root {
+      --primary: #3498db;
+      --spacing: 10px;
+    }
+
+    .box {
+      /* 使用变量 */
+      background-color: var(--primary);
+      padding: var(--spacing);
+      margin: var(--spacing);
+      color: white;
+    }
+
+    .special-area {
+      /* 在局部覆盖全局变量的值 */
+      --primary: #e74c3c; /* 在这个区域里，--primary 变成了红色 */
+    }
+  </style>
+</head>
+<body>
+  <div class="box">我是一个蓝色的盒子</div>
+  <div class="box">我也是蓝色的盒子</div>
+
+  <div class="special-area">
+    <div class="box">我变成了红色的盒子，因为我在一个重新定义了 --primary 的容器里</div>
+  </div>
+
+  <button onclick="changeColor()">点我切换主题色</button>
+
+  <script>
+    function changeColor() {
+      // 动态改变全局的 --primary 变量
+      document.documentElement.style.setProperty('--primary', '#2ecc71');
+    }
+  </script>
+</body>
+</html>
+```  
+#### `CSS`变量（`Custom Properties`）总结  
+|特性|描述|
+|-|-|  
+|是什么|一个用于存储和复用`CSS`值的自定义属性，以`--`开头|
+|如何定义|在任何`CSS`选择器中使用`--variable=name,fallback-value`函数来引用。|
+|作用域|遵循`CSS`规则，可在`:root`（全局）或特定选择器（局部）中定义。|
+|最大优势|动态性：可通过`JavaScript`在运行实时修改，实现高级功能和主题切换|
+

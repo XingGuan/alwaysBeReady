@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5×5雪碧图动画正确实现</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #fff;
+            min-height: 100vh;
+            padding: 5vw;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2vw;
+            padding: 4vw;
+            box-shadow: 0 1vw 3vw rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(1vw);
+            margin-bottom: 4vw;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 3vw;
+            font-size: 4vw;
+            text-shadow: 0.2vw 0.2vw 0.4vw rgba(0, 0, 0, 0.3);
+        }
+        
+        @media (min-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+        
+        .explanation {
+            margin-bottom: 4vw;
+            padding: 3vw;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 1.5vw;
+            font-size: 2vw;
+        }
+        
+        @media (min-width: 768px) {
+            .explanation {
+                font-size: 1rem;
+            }
+        }
+        
+        .animation-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 4vw;
+        }
+        
+        .animation-container {
+            width: 20vw;
+            height: 20vw;
+            margin: 0 auto 3vw;
+            border-radius: 1.5vw;
+            overflow: hidden;
+            position: relative;
+            background: #2c3e50;
+            box-shadow: 0 0.5vw 1.5vw rgba(0, 0, 0, 0.2);
+            border: 0.2vw solid #fff;
+        }
+        
+        /* 5x5雪碧图动画 - 正确实现 */
+        .sprite-5x5 {
+            width: 100%;
+            height: 100%;
+            /* background: url('https://assets.codepen.io/21542/5x5-sprite-demo.png') 0 0 no-repeat; */
+            background: url('BinaryTree_css_sprites.png') 0 0 no-repeat;
+            background-size: 500% 500%; /* 5列5行，所以是500% */
+            animation: sprite5x5 5s steps(24) infinite;
+        }
+        
+        @keyframes sprite5x5 {
+            /* 第一行 */
+            0% { background-position: 0% 0%; }
+            4% { background-position: 25% 0%; }
+            8% { background-position: 50% 0%; }
+            12% { background-position: 75% 0%; }
+            16% { background-position: 100% 0%; }
+            
+            /* 第二行 */
+            20% { background-position: 0% 25%; }
+            24% { background-position: 25% 25%; }
+            28% { background-position: 50% 25%; }
+            32% { background-position: 75% 25%; }
+            36% { background-position: 100% 25%; }
+            
+            /* 第三行 */
+            40% { background-position: 0% 50%; }
+            44% { background-position: 25% 50%; }
+            48% { background-position: 50% 50%; }
+            52% { background-position: 75% 50%; }
+            56% { background-position: 100% 50%; }
+            
+            /* 第四行 */
+            60% { background-position: 0% 75%; }
+            64% { background-position: 25% 75%; }
+            68% { background-position: 50% 75%; }
+            72% { background-position: 75% 75%; }
+            76% { background-position: 100% 75%; }
+            
+            /* 第五行 */
+            80% { background-position: 0% 100%; }
+            84% { background-position: 25% 100%; }
+            88% { background-position: 50% 100%; }
+            92% { background-position: 75% 100%; }
+            96% { background-position: 100% 100%; }
+            
+            100% { background-position: 100% 100%; }
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 2vw;
+            margin-bottom: 3vw;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 1.5vw 3vw;
+            border-radius: 5vw;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 0.4vw 0.6vw rgba(0, 0, 0, 0.1);
+            font-size: 1.8vw;
+        }
+        
+        @media (min-width: 768px) {
+            button {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.9rem;
+            }
+        }
+        
+        button:hover {
+            background: #2980b9;
+            transform: translateY(-0.2vw);
+            box-shadow: 0 0.6vw 0.8vw rgba(0, 0, 0, 0.15);
+        }
+        
+        .code-example {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 1.5vw;
+            padding: 3vw;
+            margin-top: 3vw;
+        }
+        
+        .code-example h2 {
+            margin-bottom: 2vw;
+            font-size: 2.5vw;
+            color: #3498db;
+        }
+        
+        @media (min-width: 768px) {
+            .code-example h2 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        pre {
+            background: #2d3436;
+            padding: 3vw;
+            border-radius: 1vw;
+            overflow-x: auto;
+            font-size: 1.8vw;
+            margin-bottom: 2vw;
+        }
+        
+        @media (min-width: 768px) {
+            pre {
+                padding: 1.5rem;
+                font-size: 0.9rem;
+            }
+        }
+        
+        .sprite-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5vw;
+            margin: 2vw 0;
+        }
+        
+        .sprite-cell {
+            background: rgba(255, 255, 255, 0.1);
+            aspect-ratio: 1/1;
+            border-radius: 0.5vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2vw;
+        }
+        
+        .position-info {
+            margin-top: 3vw;
+            font-size: 1.8vw;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 2vw;
+            border-radius: 1vw;
+        }
+        
+        @media (min-width: 768px) {
+            .position-info {
+                font-size: 0.9rem;
+            }
+        }
+        
+        .highlight {
+            color: #ffcc00;
+            font-weight: bold;
+        }
+        
+        .frame-indicator {
+            position: absolute;
+            top: 1vw;
+            right: 1vw;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 0.5vw 1vw;
+            border-radius: 1vw;
+            font-size: 1.5vw;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>5×5雪碧图动画正确实现</h1>
+        
+        <div class="explanation">
+            <p>对于5×5雪碧图（25帧），我们需要按顺序遍历所有帧，从左到右、从上到下。</p>
+            <p>下面的实现展示了如何正确设置关键帧来播放所有25帧。</p>
+        </div>
+        
+        <div class="animation-wrapper">
+            <div class="animation-container">
+                <div class="frame-indicator" id="frameIndicator">帧: 1/25</div>
+                <div class="sprite-5x5" id="sprite5x5"></div>
+            </div>
+            
+            <div class="controls">
+                <button onclick="playAnimation('sprite5x5')">播放动画</button>
+                <button onclick="pauseAnimation('sprite5x5')">暂停动画</button>
+                <button onclick="slowAnimation('sprite5x5')">减慢速度</button>
+                <button onclick="speedUpAnimation('sprite5x5')">加快速度</button>
+            </div>
+        </div>
+        
+        <div class="code-example">
+            <h2>5×5雪碧图正确实现代码</h2>
+            <pre>.sprite-5x5 {
+    background: url('sprite.png') 0 0 no-repeat;
+    background-size: 500% 500%; /* 5列5行，所以是500% */
+    animation: sprite5x5 5s steps(24) infinite;
+}
+
+@keyframes sprite5x5 {
+    /* 第一行 */
+    0% { background-position: 0% 0%; }
+    4% { background-position: 25% 0%; }
+    8% { background-position: 50% 0%; }
+    12% { background-position: 75% 0%; }
+    16% { background-position: 100% 0%; }
+    
+    /* 第二行 */
+    20% { background-position: 0% 25%; }
+    24% { background-position: 25% 25%; }
+    28% { background-position: 50% 25%; }
+    32% { background-position: 75% 25%; }
+    36% { background-position: 100% 25%; }
+    
+    /* 第三行 */
+    40% { background-position: 0% 50%; }
+    44% { background-position: 25% 50%; }
+    48% { background-position: 50% 50%; }
+    52% { background-position: 75% 50%; }
+    56% { background-position: 100% 50%; }
+    
+    /* 第四行 */
+    60% { background-position: 0% 75%; }
+    64% { background-position: 25% 75%; }
+    68% { background-position: 50% 75%; }
+    72% { background-position: 75% 75%; }
+    76% { background-position: 100% 75%; }
+    
+    /* 第五行 */
+    80% { background-position: 0% 100%; }
+    84% { background-position: 25% 100%; }
+    88% { background-position: 50% 100%; }
+    92% { background-position: 75% 100%; }
+    96% { background-position: 100% 100%; }
+    
+    100% { background-position: 100% 100%; }
+}</pre>
+            <p>对于N行M列的雪碧图，需要为每个帧设置一个关键帧，确保按顺序遍历所有帧。</p>
+        </div>
+        
+        <div class="sprite-grid">
+            <div class="sprite-cell">1</div>
+            <div class="sprite-cell">2</div>
+            <div class="sprite-cell">3</div>
+            <div class="sprite-cell">4</div>
+            <div class="sprite-cell">5</div>
+            <div class="sprite-cell">6</div>
+            <div class="sprite-cell">7</div>
+            <div class="sprite-cell">8</div>
+            <div class="sprite-cell">9</div>
+            <div class="sprite-cell">10</div>
+            <div class="sprite-cell">11</div>
+            <div class="sprite-cell">12</div>
+            <div class="sprite-cell">13</div>
+            <div class="sprite-cell">14</div>
+            <div class="sprite-cell">15</div>
+            <div class="sprite-cell">16</div>
+            <div class="sprite-cell">17</div>
+            <div class="sprite-cell">18</div>
+            <div class="sprite-cell">19</div>
+            <div class="sprite-cell">20</div>
+            <div class="sprite-cell">21</div>
+            <div class="sprite-cell">22</div>
+            <div class="sprite-cell">23</div>
+            <div class="sprite-cell">24</div>
+            <div class="sprite-cell">25</div>
+        </div>
+        
+        <div class="position-info">
+            <p>5×5雪碧图的背景位置计算：</p>
+            <p>X轴位置: <span class="highlight">0%, 25%, 50%, 75%, 100%</span></p>
+            <p>Y轴位置: <span class="highlight">0%, 25%, 50%, 75%, 100%</span></p>
+            <p>每个帧的background-position为: <span class="highlight">X% Y%</span></p>
+        </div>
+    </div>
+
+    <script>
+        let speed5x5 = 5;
+        let currentFrame = 1;
+        
+        function playAnimation(elementId) {
+            const element = document.getElementById(elementId);
+            element.style.animationPlayState = 'running';
+            
+            // 更新帧指示器
+            const indicator = document.getElementById('frameIndicator');
+            const interval = setInterval(() => {
+                console.log('11111111111',currentFrame,speed5x5)
+                currentFrame = (currentFrame % 25) + 1;
+                indicator.textContent = `帧: ${currentFrame}/25`;
+            }, speed5x5 * 1000 / 25);
+        }
+        
+        function pauseAnimation(elementId) {
+            const element = document.getElementById(elementId);
+            element.style.animationPlayState = 'paused';
+        }
+        
+        function slowAnimation(elementId) {
+            const element = document.getElementById(elementId);
+            speed5x5 += 1;
+            element.style.animationDuration = speed5x5 + 's';
+        }
+        
+        function speedUpAnimation(elementId) {
+            const element = document.getElementById(elementId);
+            if (speed5x5 > 1) {
+                speed5x5 -= 1;
+                element.style.animationDuration = speed5x5 + 's';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        html {
+            font-size: 0.13333vw;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .box {
+            box-sizing: border-box;
+            width: 50vw;
+            height: 50vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 0.05vw solid #272626;
+        }
+
+        .box .loading-box {
+            /* width: 46.67vw;
+            height: 46.67vw; */
+            width: 9.33vw;
+            height: 9.33vw;
+            overflow: hidden;
+        }
+
+        .box .loading-box .loading {
+            width: 100%;
+            height: 100%;
+            background: url('BinaryTree_css_sprites.png') 0 0 no-repeat;
+            background-size: 500% 500%;
+            /* animation: sprite5x5New 15s steps(25) infinite; */
+            /* --frame: 0;
+            background-position: calc((var(--frame) % 5) * 25%) calc(floor(var(--frame) / 5) * 25%);
+            animation: change-frame 5s steps(24) infinite; */
+            /* background-size: 46.65vw 46.65vw; */
+            /* animation: spriteAnimation 3s steps(5) infinite; */
+        }
+
+        /* @keyframes change-frame {
+            to {
+                --frame: 24;
+            }
+        } */
+
+        @keyframes spriteAnimation {
+
+            0% {
+                background-position: 0% 0%;
+            }
+
+            20% {
+                background-position: 100% 0%;
+            }
+
+            40% {
+                background-position: 0% 25%;
+            }
+
+            60% {
+                background-position: 100% 25%;
+            }
+
+            80% {
+                background-position: 0% 50%;
+            }
+
+            100% {
+                background-position: 100% 50%;
+            }
+        }
+
+        @keyframes sprite5x5New {
+            from {
+                background-position: 0% 0%;
+            }
+
+            to {
+                background-position: 500% 500%;
+                /* 5倍于容器大小 */
+            }
+        }
+
+        @keyframes sprite5x5 {
+
+            /* 第一行 */
+            0% {
+                background-position: 0% 0%;
+            }
+
+            4% {
+                background-position: 25% 0%;
+            }
+
+            8% {
+                background-position: 50% 0%;
+            }
+
+            12% {
+                background-position: 75% 0%;
+            }
+
+            16% {
+                background-position: 100% 0%;
+            }
+
+            /* 第二行 */
+            20% {
+                background-position: 0% 25%;
+            }
+
+            24% {
+                background-position: 25% 25%;
+            }
+
+            28% {
+                background-position: 50% 25%;
+            }
+
+            32% {
+                background-position: 75% 25%;
+            }
+
+            36% {
+                background-position: 100% 25%;
+            }
+
+            /* 第三行 */
+            40% {
+                background-position: 0% 50%;
+            }
+
+            44% {
+                background-position: 25% 50%;
+            }
+
+            48% {
+                background-position: 50% 50%;
+            }
+
+            52% {
+                background-position: 75% 50%;
+            }
+
+            56% {
+                background-position: 100% 50%;
+            }
+
+            /* 第四行 */
+            60% {
+                background-position: 0% 75%;
+            }
+
+            64% {
+                background-position: 25% 75%;
+            }
+
+            68% {
+                background-position: 50% 75%;
+            }
+
+            72% {
+                background-position: 75% 75%;
+            }
+
+            76% {
+                background-position: 100% 75%;
+            }
+
+            /* 第五行 */
+            80% {
+                background-position: 0% 100%;
+            }
+
+            84% {
+                background-position: 25% 100%;
+            }
+
+            88% {
+                background-position: 50% 100%;
+            }
+
+            92% {
+                background-position: 75% 100%;
+            }
+
+            96% {
+                background-position: 100% 100%;
+            }
+
+            100% {
+                background-position: 100% 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="loading-box">
+            <div class="loading"></div>
+        </div>
+    </div>
+    <script>
+        const element = document.querySelector('.loading');
+        const frames = 25;
+        let currentFrame = 0;
+
+        function animate() {
+            const x = (currentFrame % 5) * 25;
+            const y = Math.floor(currentFrame / 5) * 25;
+            element.style.backgroundPosition = `${x}% ${y}%`;
+
+            currentFrame = (currentFrame + 1) % frames;
+            setTimeout(animate, 200); // 每200ms切换一帧
+        }
+
+        animate();
+    </script>
+</body>
+</html>

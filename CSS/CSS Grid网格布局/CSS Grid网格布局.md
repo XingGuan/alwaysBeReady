@@ -1,4 +1,12 @@
 [参考链接阮一峰--网格布局](https://ruanyifeng.com/blog/2019/03/grid-layout-tutorial.html)
+
+> `CSS Grid`(网格布局)，实现网页布局的重要手段。  
+> 二维布局模型（同时处理行和列）。  
+> 核心概念：容器（`display:grid`）、轨道（`track`）、单元格（`cell`）、区域（`area`）。使用`grid-template-columns/rows`,`grid-template-areas`,`gap`等属性定义。  
+> 为什么重要：用于整体页面布局和复杂二维结构（如日历、`dashboard`）的终极方案。比传统基于`float`和`position`的布局强大和清晰得多。   
+
+
+
 ## 一、概述   
 网格布局(Grid)是最强大的`CSS`布局方案。   
 

@@ -1,0 +1,93 @@
+### `CSS` `BEM`?  
+> 一种`CSS`类名命名约定，如`.block__element--modifier`。  
+> **为什么重要**：解决大型项目中类名冲突、样式污染、选择器优先级混乱的问题，提高可读性和可维护性。
+#### 什么是`BEM`?  
+> `BEM`是一种前端`CSS`类名的命名规范，旨在帮助开发者创建可重用、可维护且结构清晰的组件和布局。它的核心思想是将用户界面划分为独立的块(`Block`)、**元素**(`Element`)和**修饰符**（`Modifier`）。  
+
+`BEM`是`Block`(块)、`Element`(元素)、`Modifier`(修饰符)的缩写。  
+
+#### 核心概念  
+a.`Block`(块)  
+一个独立的、可复用的组件或模块，它在语义和功能上是自成一体的。   
++ **特点**：块可以嵌套在其他块中，但它们自身应该是独立的。例如，一个头部（`header`）、一个菜单（`menu`）、一个搜索框（`search-form`）都可以是一个块。  
++ **命名**：块名描述其目的（"它是什么？"），而不是其状态（"它看起来怎么样？"）。例如：`.menu`,`.button`、`.card`。  
+b.`Element`（元素）  
+块的一部分，**不能独立于块而存在**。它没有独立的意义，在语义上依赖于其所属的块。  
++ **特点**：元素总是属于某个块。例如：一个菜单项（`menu__item`）是菜单块（`menu`）的一部分，一个标题（`card__title`）是卡片块（`card`）的一部分。
++ **命名**：元素名由所属的块名+**双下划线**`__`+ **元素名** 组成。例如`.menu__item`,`.card__title`。   
+6.**Modifier**（修饰符）  
+一个标志，用于改变块或元素的外观、状态或行为。  
++ **特点**：修饰符不能单独使用，它必须附加在块或元素上。  
++ **命名**：修饰符名由它所修改的**块或元素名**+ **双连字符**+`--`+**修饰符名**组成。例如：`.button--primary`,`.menu__item--active`。   
+
+##### `eg`  
+假设我们有一个搜索表单块（`search-form`）。
++ `Block`: `.search-form` (整个表单本身就是一个独立的组件)
++ `Elements`:
+    + `.search-form__input` (输入框，是表单的一部分)
+    + `.search-form__button`(提交按钮，是表单的一部分)  
+
++ `Modifiers`
+    + `search-form--disabled` (修饰整个表单，使其处于禁用状态)  
+    + `search-form__button--large`(只修饰按钮，使其变大)  
+
+对应的`HTML`结构可能如下：  
+```html
+<form class="search-form search-form--disabled">
+  <input type="text" class="search-form__input">
+  <button class="search-form__button search-form__button--large">Search</button>
+</form>
+```  
+对应的`CSS`可能如下：  
+```css
+/* 块样式 */
+.search-form {
+  max-width: 300px;
+}
+
+/* 元素样式 */
+.search-form__input {
+  border: 1px solid #ccc;
+}
+.search-form__button {
+  background-color: blue;
+  color: white;
+}
+
+/* 修饰符样式 */
+.search-form--disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+.search-form__button--large {
+  padding: 20px;
+  font-size: 1.5em;
+}
+```
+3.为什么要使用`BEM`？（优点）  
+1.**清晰的结构**：只要有类名就能立刻理解元素之间的关系和功能。`.card__title--highlighted` 很明显是卡片块下的标题元素，并且处于高亮状态。  
+2.**避免样式冲突（`CSS`特异性低）**：`BEM` 通过独特的类名来作用样式，避免了嵌套选择器，使得所有选择器几乎都具有相同的特异性（权重）。这大大降低了样式意外覆盖的风险。  
+3.**可重用性和模块化**：每个模块都是独立的，你可以轻松地将一个块从一个项目转移到另一个项目，而不用担心它的样式会与项目中的其他样式冲突。  
+4.**团队协作**：`BEM`提供了一种所有团队成员都能理解的通用命名约定，使代码更易于阅读和维护，减少了沟通成本。  
+5.**摆脱深层嵌套**：使用`BEM`后，你的`CSS`选择器会变得非常"平坦"，很少需要编写像`.nav ul li a`这样冗长且高特异性的选择器，通常只需要一个类选择器即可。  
+
+
+#### 常见问题与技巧   
++ 块中可以嵌套块：一个块可以是另一个块的元素，但它们的命名空间是独立的。   
+```html
+<div class="header">
+  <div class="header__logo"></div>
+  <div class="menu"> <!-- 这是一个嵌套在 header 块中的独立 menu 块 -->
+    <div class="menu__item"></div>
+  </div>
+</div>
+```  
++ **修饰符应单独使用**：修饰符类不应单独使用，而应与其所修饰的块或元素基类一起使用。  
++ **正确**：`<div class="block block--mod"></div>`
++ **避免**：`<div class="block--mod">`(缺少基类`.block`,样式可能不完整)  
++ **不要过度嵌套元素**：`BEM`不推荐像`.block__elem1__elem2`这样的命名。如果结构非常复杂，这可能意味着你应该将内部结构提取为一个新的块（`Block`）。   
+
+#### 总结  
+`BEM`不仅仅是一种命名约定，更是一种**前端架构的思想**。它通过一套简单严格的规则，强制开发者以模块化的方式思考，从而创造出更健壮、更可维护的`CSS`代码。对于中大型项目或团队协作来说，学习和采用`BEM`（或其他类似方法论如`SMASCSS,ITCSS`）是非常有价值的。   
+
+
