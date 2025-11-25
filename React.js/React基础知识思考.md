@@ -11,7 +11,7 @@ React组件接收一些参数，我们把这些参数叫做props，然后通过r
 ### 3、什么是`JSX`?为什么浏览器无法读取`JSX`?  
 `JSX` 是`JavaScript XML`的缩写，是`React`使用的一种文件。   
 它利用`javascript`的表现力和类似`HTML`的模板语法，使得`HTML`文件非常容易理解。提高性能，在React环境下更友好的错误提示。  
-浏览器只能处理`JavaScript`对象，而不能读取`JavaScript`中的`JSX`，所以为了使浏览器能够读取`JSX`，首先，需要使用`babel`转换器将`JSX`文件转换为`JavaScript`对象，让后再将其传给浏览器。  
+浏览器只能处理`JavaScript`对象，而不能读取`JavaScript`中的`JSX`，所以为了使浏览器能够读取`JSX`，首先，需要使用`babel`转换器将`JSX`文件转换为`JavaScript`对象，然后再将其传给浏览器。  
 
 
 
