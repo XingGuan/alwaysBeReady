@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <!--TODO HTML页面标题-->
+    <title>2025上海精品微短剧展播</title>
+    <link rel="shortcut icon" href="//bp-share.bestv.cn/bes_favicon.ico" type="image/x-icon" />
+    <link href="css/common.css" rel="stylesheet">
+    <link href="css/index.css" rel="stylesheet">
+    <link href="css/swiper-bundle.min.css" rel="stylesheet">
+    <link href="css/video-js.min.css" rel="stylesheet">
+    <script type="text/javascript">
+        var getGlobal = function () {
+            if (typeof self !== "undefined") {
+                return self;
+            }
+            if (typeof window !== "undefined") {
+                return window;
+            }
+            if (typeof global !== "undefined") {
+                return global;
+            }
+            throw new Error("unable to locate global object");
+        };
+        if (!globalThis) {
+            var globalThis = getGlobal();
+        }
+    </script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery.cookie.min.js"></script>
+    <script type="text/javascript" src="js/jquery.md5.js"></script>
+    <script type="text/javascript" src="js/es5/config.js?v=4"></script>
+    <script type="text/javascript" src="js/es5/request.js?v=4"></script>
+    <script type="text/javascript" src="js/es5/common.js?v=4"></script>
+    <script type="text/javascript" src="js/lib/jweixin-1.6.0.js"></script>
+    <script type="text/javascript" src="js/lib/hls.js"></script>
+    <script type="text/javascript" src="js/swiper-bundle.min.js"></script>
+    <script type="text/javascript" src="js/video.min.js"></script>
+    <script type="text/javascript" src="js/pulltorefresh.js"></script>
+    <!--  <script type="text/javascript" src="js/lib/vconsole.min.js"></script>-->
+    <!--  <script type="text/javascript">-->
+    <!--    var vConsole = new VConsole();-->
+    <!--  </script>-->
+    <script type="text/javascript" src="js/es5/hybridapp.js?v=4"></script>
+    <script src="js/new-analysys/analyseMethods.js"></script>
+    <script src="js/new-analysys/JSSDK/AnalysysAgent_Encrypt.min.js"></script>
+    <script src="js/new-analysys/initSDK.js"></script>
+    <!--<script type="text/javascript" src="https://wechatfe.github.io/lib/vconsole/3.4.1/vconsole.min.js"></script>-->
+    <!--<script type="text/javascript">-->
+    <!--  let vConsole = new VConsole();-->
+    <!--</script>-->
+    <!--  <script type="text/javascript" src="./js/swiper-bundle.min.js"></script>-->
+    <!--易观埋点-->
+    <!--同步接入加密模块SDK-->
+    <!--  <script type="text/javascript" src="js/analysys/sdk/AnalysysAgent_Encrypt.min.js"></script>-->
+    <!--  &lt;!&ndash;同步接入GBK转码模块SDK&ndash;&gt;-->
+    <!--  <script type="text/javascript" src="js/analysys/sdk/AnalysysAgent_GBK.min.js"></script>-->
+    <!--  &lt;!&ndash;初始化SDK&ndash;&gt;-->
+    <!--  <script type="text/javascript" src="js/analysys/initSdk.js"></script>-->
+    <!--  &lt;!&ndash;同步接入SDK&ndash;&gt;-->
+    <!--  <script type="text/javascript" src="js/analysys/sdk/AnalysysAgent_JS_SDK.min.js"></script>-->
+
+    <style>
+        /*TODO 页面背景色和背景图（背景图固定高度，页面过长的余下部分显示背景色）*/
+        body {
+            background-color: #051e49;
+            background-image: url(https://bp-image.bestv.cn/resource/pic/6bdd316d-4606-4a1a-9609-f51561eb17791765362131884.png);
+        }
+
+        /*TODO 横图行模块-标题-颜色*/
+        .app-list-vertical-item-title,
+        /*TODO 自定义-单排横图行模块-标题-颜色*/
+        .app-list-settings-vertical-item-title,
+        /*TODO 自定义- 大横图加多横图-标题-颜色*/
+        .app-list-setting-module-horizontalMoreBig-vertical-item-title,
+        /*TODO 自定义-多横图模块-标题-颜色*/
+        .app-list-setting-module-horizontalMore-vertical-item-title,
+        /*TODO 自定义-横图行模块-标题-颜色*/
+        .app-list-setting-module-horizontial-vertical-item-title,
+        /*TODO 竖型图行模块-标题-颜色*/
+        .app-list-horizontal-item-title,
+        /*TODO 自定义-方图行模块-标题-颜色*/
+        .app-list-settings-horizontal-item-title,
+        /*TODO 自定义-短视频模块-标题-颜色*/
+        .app-list-setting-more-item-title-text,
+        /* TODO 轮播图标题-颜色 */
+        .mySwiper_title,
+        /* TODO 自定义-轮播图标题-颜色 */
+        .swiper-slide-setting-title,
+        /* TODO 自定义-轮播图创作者昵称-颜色 */
+        .swiper-slide-setting-creator-nickname,
+        /* TODO 自定义-图-标题-颜色 */
+        .app-list-setting-module-pic-setting-item-title {
+            color: #fbfbfc !important;
+        }
+
+        /* TODO 自定义-短视频-视频时长-颜色 */
+        .app-list-settings-video-item-length {
+            color: #fbfbfc !important;
+        }
+
+        /* TODO 自定义-自定义双排信息流-字体-颜色 */
+        .card-v-item {
+            color: #fbfbfc !important;
+        }
+
+        .waterfall-item {
+            color: #fbfbfc !important;
+        }
+
+        /* TODO 自定义-创作者昵称-标题-颜色 */
+        /* TODO 自定义-短视频创作者昵称-颜色 */
+        .app-list-settings-vertical-item-creator-nickname,
+        .app-list-settings-video-item-creator-nickname {
+            color: #fbfbfc !important;
+        }
+
+        /* TODO 横图行模块-副标题-颜色 */
+        .app-list-vertical-item-small-title,
+        /* TODO 竖型行模块-副标题-颜色 */
+        .app-list-horizontal-item-small-title {
+            color: #fbfbfc;
+            opacity: 80%;
+        }
+
+        /*TODO 横图行，左右翻页时，高亮（当前选中）分页条的背景颜色。可用RGBA也可用RGB*/
+        .pagination-selected {
+            background: ;
+        }
+
+        /*TODO 短视频集锦单项标题背景色*/
+        .app-list-more-item-title {
+            background: ;
+        }
+
+        /*TODO 短视频集锦列表底线文本颜色*/
+        .app-list-bottomline {
+            color: #ffffff;
+        }
+
+        /*TODO 上方留白高度修改项 rem换算（px值/100）*/
+        .app-module-list {
+            padding-top: 140.0px;
+        }
+
+        /* 字体标题 字体颜色设置*/
+        .app-module-title-text {
+            color: #fbfbfc;
+            text-align: center;
+        }
+
+        /*TODO 互动按钮 上方留白高度修改项  rem换算（px值/100）*/
+        .app-button {
+            top: 5.22rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!--互动功能模块-->
+    <!--TODO data-isInteractiveShown，是否显示互动功能模块：0，不显示；1，显示-->
+    <div class="app-button" data-isInteractiveShown="0">
+        <!--互动按钮，同一用户点击前，默认，相信-->
+        <!--TODO background-color，没有图片时显示的默认背景色：rgba，带有透明度的RGB，也可换成HEX如#00FFFF-->
+        <div class="app-button-pic" style="background-color: rgba(0,0,0,0)">
+            <img alt="" id="icon-before-click" src="">
+        </div>
+        <!--互动按钮，同一用户点击后，奥迷认证-->
+        <!--TODO background-color，没有图片时显示的默认背景色：rgba，带有透明度的RGB，也可换成HEX如#00FFFF-->
+        <div class="app-button-pic" style="background-color: rgba(0,0,0,0)">
+            <img alt="" id="icon-after-click" src="">
+        </div>
+        <!--TODO 互动按钮点击用户数文本-->
+        <div class="app-button-count"></div>
+    </div>
+
+    <!--四种模块：横图行、方图行、竖图行、短视频集锦-->
+    <!--模块列表容器-->
+    <div class="app-module-list">
+
+
+
+
+
+
+
+
+
+        <div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <div class="app-module" data-moduleType="18" data-title="模块标题" data-author="0" data-showCount="12"
+                data-isMore="false" data-moreModelTitle="都市烟火·现实镜像">
+                <!--模块标题-->
+                <div class="app-module-title">
+                    <!--模块标题图片容器-->
+                    <div class="app-module-title-pic">
+                        <!--模块标题图片本身-->
+                        <img alt=""
+                            src="https://bp-image.bestv.cn/resource/pic/f39a9cd0-b055-4d69-9d58-46c7fe2c21491765362044705.png">
+                    </div>
+
+                </div>
+
+                <!--模块主体-->
+                <div class="app-module-main">
+                    <!--此处加载列表项目具体内容-->
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+
+        <div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <div class="app-module" data-moduleType="18" data-title="模块标题" data-author="0" data-showCount="12"
+                data-isMore="false" data-moreModelTitle="古风奇缘·穿越新章">
+                <!--模块标题-->
+                <div class="app-module-title">
+                    <!--模块标题图片容器-->
+                    <div class="app-module-title-pic">
+                        <!--模块标题图片本身-->
+                        <img alt=""
+                            src="https://bp-image.bestv.cn/resource/pic/2d1ccb65-08a3-4ead-a689-3156c38f2b131765362055345.png">
+                    </div>
+
+                </div>
+
+                <!--模块主体-->
+                <div class="app-module-main">
+                    <!--此处加载列表项目具体内容-->
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+    </div>
+
+
+    <ul class="app-list-more">
+    </ul>
+    <!--列表底线-->
+    <div class="app-list-bottomline" id="app-list-bottomline">更多精彩尽在看东方
+    </div>
+    <!--侧边工具条-->
+    <div class="app-toolbar">
+        <!--回顶部按钮-->
+        <div class="app-toolbar-item button-top" id="button-top"></div>
+        <!--分享按钮-->
+        <div class="app-toolbar-item button-share" id="button-share"></div>
+    </div>
+
+    <!--toast-->
+    <div class="false" id="false"></div>
+
+</body>
+
+
+<script type="text/javascript" src="js/es5/carousel.js?v=4"></script>
+<script type="text/javascript" src="js/es5/index.js?v=5"></script>
+
+<script type="text/javascript">
+    $(function () {
+        // 点击互动按钮
+        $('.app-button').on('click', function () {
+            clickButtonInteractive()
+        })
+    });
+
+    if (PullToRefresh && PullToRefresh.init) {
+        PullToRefresh.init({
+            mainElement: 'body',
+            instructionsPullToRefresh: '下拉刷新',
+            instructionsReleaseToRefresh: '释放刷新',
+            instructionsRefreshing: '加载中 ...',
+            onRefresh: function () {
+                if (isBestv()) {
+                    analyseShortVideoClose(false);
+                    if (autoplayLiveList && autoplayLiveList.length) {
+                        processQueueCloseCirculate(autoplayLiveList);
+                    }
+                }
+                window.location.reload();
+            }
+        });
+    }
+
+    var EVENT_ID = "Microdramacollection"; // 活动ID，埋点参数 TODO
+
+    // TODO 分享整个页面数据
+    // log，封面图片地址；des，分享描述；event_id，活动ID（预定值）
+    function getPageShareData() {
+        return {
+            'cmd': 'sharePage',
+            'log': "https:\/\/bp-image.bestv.cn\/resource\/pic\/cd48be81-cedb-4561-97d2-af8d2f86654f1765337679818.png", // TODO 分享图片URL
+            'title': "2025\u4E0A\u6D77\u7CBE\u54C1\u5FAE\u77ED\u5267\u5C55\u64AD", // 取自页面标题
+            'des': "\u5E26\u4F60\u7EE7\u7EED\u5F71\u89C6\u72C2\u6B22\uFF0C\u5C55\u73B0\u5FAE\u77ED\u5267\u7684\u591A\u5143\u9B45\u529B", // TODO 页面描述
+            'event_id': EVENT_ID, // 取自活动ID
+            'event_name': "2025\u4E0A\u6D77\u7CBE\u54C1\u5FAE\u77ED\u5267\u5C55\u64AD", // TODO 活动标题
+            'shareUrl': encodeURI(window.location.href),
+            'news_params': {
+                'posters_title': "2025\u4E0A\u6D77\u7CBE\u54C1\u5FAE\u77ED\u5267\u5C55\u64AD",
+                'posters_url': null,
+                'posters_width': null,
+                'posters_height': null
+            }
+        };
+    }
+
+    var ACTIVITY_CODE = "Microdramacollection"; // 活动代码，接口参数 TODO
+
+    // 点击互动按钮
+    function clickButtonInteractive() {
+        // 按钮点击埋点
+        // var pageInfo = {
+        //   '$title': document.title, // 取自页面标题
+        //   'btn_name': '相信', // TODO 按钮名称
+        //   'desc': '你相信光么', // TODO 按钮信息说明
+        // }
+        // AnalysysAgent.track('btn_click', pageInfo);
+
+        // 获取cookie字段isClicked
+        var isClicked = $.cookie('isClicked')
+        if (isClicked) {
+            // 点击过，不再提交点击请求
+            return
+        }
+        // 调用TODO 点击互动按钮接口
+        requestClickButton()
+    }
+
+    // 发送点击互动按钮请求
+    function requestClickButton() {
+        // 互动按钮点击过了，不再请求
+        if ($.cookie('isClicked')) {
+            return
+        }
+
+        ajax({
+            url: host + '/cms/api/c/project/vote/v1',
+            type: 'POST',
+            async: true,
+            dataType: 'json',
+            data: {
+                activityCode: ACTIVITY_CODE, // 接口活动代码
+            },
+            success: (response) => {
+                var res = JSON.parse(response);
+                // console.log('发送点击互动按钮请求', res);
+
+                if (res.ss) {
+                    // 点击成功
+                    whichButtonDisplay(true)
+
+                    // 更新cookie
+                    $.cookie('isClicked', 'true', { expires: 30, })
+                    // console.log('$.cookie(\'isClicked\')', $.cookie('isClicked'))
+
+                    // 本地先更新点击用户数
+                    var clickedCount = $('.app-button-count').html() - 0
+                    clickedCount++
+                    $('.app-button-count').html(clickedCount + '')
+
+                    // 再调用接口更新
+                    requestButtonClickedCount()
+
+                } else {
+                    toastErrorMessage(res.em)
+                }
+            },
+            error: (error) => {
+                console.log(error)
+            }
+        })
+    }
+
+</script>
+</html>

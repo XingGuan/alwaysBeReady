@@ -55,5 +55,7 @@
 如果省略此选项，编译器将使用“outDir”选项指定的文件夹。        
 如果没有同时指定“files”和“include”这两个选项，则编译器将编译根目录和任何子目录中的所有TS文件，但不包括使用“exclude”选项指定的文件。  
 
-
+### 这里有两个重要配置项  
+`"moduleResolution": "node"` 
+`"resolveJsonModule": "true"`
 
