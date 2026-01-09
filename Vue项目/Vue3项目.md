@@ -26,6 +26,7 @@ npm run build
 #### 参考文档  
 [Vue.js](https://cn.vuejs.org/guide/quick-start.html#next-steps)   
 [Vite 文档](https://cn.vitejs.dev/)   
+[Vite 配置项文档](https://vitejs.cn/vite3-cn/config/)
 
 #### 增加环境配置文件，修改启动及打包命令
 新增`.env`、`.env.development`、`.env.staging`、`.env.production`不同环境下的环境变量配置。
@@ -121,6 +122,8 @@ export default ({ mode }) => {
 ```
 
 #### 4.`Vue3 + Vite`移动端适配并兼容`Vant`  
+> `postcss-px-to-viewport`和`cnjm-postcss-px-to-viewport`的核心区别在于：**后者是前者的一个改进版，主要解决了在同一个项目中，需要根据不同设计稿（如自己的750px稿和Vant组件的375px稿）进行精确适配的问题。`cnjm-postcss-px-to-viewport`精准适配混合设计稿，能自动为Vant组件(375px)和业务代码(如750px)应用正确的转换比例。**  
+
 + 引入`cnjm-postcss-px-to-viewport`适配移动端(`px 转成 vw`)  
 ```javascript
 import pxTovw from "cnjm-postcss-px-to-viewport";
@@ -257,3 +260,4 @@ npm install --save crypto-js
 
 #### 10.`vite`兼容低版本浏览器  
 引入`legacy`  
+[`@vitejs/plugin-legacy`](https://vitejs.cn/vite3-cn/plugins/)
