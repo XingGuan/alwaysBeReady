@@ -261,3 +261,168 @@ npm install --save crypto-js
 #### 10.`vite`兼容低版本浏览器  
 引入`legacy`  
 [`@vitejs/plugin-legacy`](https://vitejs.cn/vite3-cn/plugins/)
+
+
+## 项目改进  
+`vite.config.js`
+```javascript  
+ import { fileURLToPath, URL } from 'node:url'
+import { defineConfig, loadEnv } from 'vite'
+import legacy from '@vitejs/plugin-legacy'
+import vue from '@vitejs/plugin-vue'
+import pxtovw from 'cnjm-postcss-px-to-viewport'
+import autoprefixer from 'autoprefixer'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { VantResolver } from '@vant/auto-import-resolver'
+
+// import vueDevTools from 'vite-plugin-vue-devtools'
+// import path from 'path'
+// import { dirname } from 'node:path'
+// 获取__dirname
+// function getCurrentDir() {
+//   const __filename = fileURLToPath(import.meta.url)
+//   const __dirname = dirname(__filename)
+//   return __dirname
+// }
+// https://vitejs.dev/config/
+export default ({ mode }) => {
+  const env = loadEnv(mode, process.cwd())
+  const my_pxtovw = pxtovw({
+    unitToConvert: 'px', // 要转化的单位
+    viewportWidth: 750, // UI设计稿的宽度
+    unitPrecision: 6, // 转换后的精度，即小数点位数
+    propList: ['*'], // 指定转换的css属性的单位，*代表全部css属性的单位都进行转换
+    viewportUnit: 'vw', // 指定需要转换成的视窗单位，默认vw
+    fontViewportUnit: 'vw', // 指定字体需要转换成的视窗单位，默认vw
+    selectorBlackList: ['ignore', 'van-'], // 指定不转换为视窗单位的类名，
+    minPixelValue: 1, // 默认值1，小于或等于1px则不进行转换
+    mediaQuery: true, // 是否在媒体查询的css代码中也进行转换，默认false
+    replace: true, // 是否转换后直接更换属性值
+    exclude: [/node_modules\/vant/], // 只排除vant，其他node_modules中的样式仍转换 解决vant375,设计稿750问题。忽略某些文件夹下的文件或特定文件, 设置忽略文件，用正则做目录名匹配
+    landscape: false, // 是否处理横屏情况
+    // customFun: ({ file }) => {
+    // 如果没有使用其他的尺寸来设计，下面这个方法可以不需要，比如vant是375的
+    //   //这个自定义的方法是针对处理vant组件下的设计稿为375问题;
+    //   const designWidth = path.join(file).includes(path.join('node_modules', 'vant')) ? 375 : 750
+    //   return designWidth
+    // }
+  })
+  return defineConfig({
+    base: './',
+    resolve: {
+      alias: {
+        '@': fileURLToPath(new URL('./src', import.meta.url)),
+        assets: '@/assets',
+        utils: '@/utils',
+        api: '@/api',
+        store: '@/store',
+        lib: '@/lib'
+      }
+    },
+    // Vite自身已经集成PostCSS，无需再次安装。另外也无需单独创建PostCSS配置文件，已集成到vite.config.js的css选项中
+    css: {
+      preprocessorOptions: {
+        less: {
+          charset: false,
+          javascriptEnabled: true,
+          additionalData: `@import "@/assets/style/global.less";`
+        }
+      },
+      postcss: {
+        plugins: [
+          my_pxtovw,
+          autoprefixer({
+            // 指定目标浏览器
+            overrideBrowserslist: ['> 1%', 'last 2 versions']
+          })
+        ]
+      }
+    },
+    plugins: [
+      vue({
+        template: {
+          compilerOptions: {
+            isCustomElement: (tag) => tag.includes('wx-open-launch')
+          }
+        }
+      }),
+      // vueDevTools(),
+      AutoImport({
+        imports: ['vue', 'vue-router', 'pinia'],
+        dts: 'src/auto-import.d.ts',
+        ignore: ['h'],
+        eslintrc: {
+          enabled: true,
+        },
+        resolvers: [VantResolver()]
+      }),
+      Components({
+        resolvers: [VantResolver({ importStyle: false })]
+      }),
+      legacy({
+        targets: ['defaults', 'not IE 11', 'Android >= 7'],
+        additionalLegacyPolyfills: ['regenerator-runtime/runtime'], // 面向IE11时需要此插件
+        modernPolyfills: true
+      })
+    ],
+    esbuild: {
+      drop: env?.VITE_DROP_CONSOLE === 'true' ? ['console', 'debugger'] : []
+    },
+    server: {
+      host: env.VITE_HOST,
+      port: env.VITE_PORT,
+      open: `http://${env.VITE_IP}:${env.VITE_PORT}`, // 指定 IP 地址和端口
+      proxy: {
+        "^/v1": {
+          target: 'http://172.16.108.106',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/v1/, ''),
+        }
+      }, // 为开发服务器配置自定义代理规则
+      cacheDir: '.vite-cache',
+    }
+  })
+}
+```  
+`.eslintrc.cjs` `eslint`文件配置更新  
+```javascript
+/* eslint-env node */
+require('@rushstack/eslint-patch/modern-module-resolution')
+
+module.exports = {
+  env: {
+    browser: true,
+    es2021: true,
+    node: true
+  },
+  root: true,
+  extends: [
+    'eslint:recommended',
+    'plugin:vue/vue3-recommended',
+    '@vue/eslint-config-prettier/skip-formatting',
+    './.eslintrc-auto-import.json' // 如果所有文件都需要自动导入
+  ],
+  parser: 'vue-eslint-parser',
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module'
+  },
+  rules: {
+    'vue/multi-word-component-names': 'off', // 关闭Vue组件必须使用多单词命名的规则
+    'vue/no-v-html': 'off' // 允许使用 v-html
+  },
+  overrides: [
+    {
+      files: ['*.html'],
+      rules: {
+        'vue/comment-directive': 'off',
+        'vue/no-unused-components': 'off',
+        'vue/require-v-for-key': 'off',
+        'vue/valid-v-for': 'off'
+      }
+    }
+  ]
+}
+
+```

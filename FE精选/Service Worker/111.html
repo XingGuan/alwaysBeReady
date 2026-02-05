@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue3 H5 刮刮乐插件</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+
+        .scratch-demo-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .card-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-title {
+            margin-bottom: 15px;
+            color: #34495e;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .scratch-container {
+            position: relative;
+            display: inline-block;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .prize-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .default-prize {
+            padding: 20px;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .prize-main {
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .prize-desc {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .scratch-canvas {
+            position: relative;
+            z-index: 1;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="%23000" stroke-width="1"/></svg>') 16 16, auto;
+            touch-action: none;
+            border-radius: 12px;
+            background: transparent;
+        }
+
+        .percentage {
+            margin-top: 12px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .controls {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .controls h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .btn-reset {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+        }
+
+        .btn-check {
+            background: linear-gradient(135deg, #48cae4, #0096c7);
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #ffd166, #f9c74f);
+        }
+
+        .result-area {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .result-area h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+
+        .result-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .result-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .result-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .result-value {
+            color: #4ecdc4;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .instructions {
+            margin-top: 30px;
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .instructions h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+
+        .instructions p {
+            margin-bottom: 10px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .instructions ul {
+            padding-left: 20px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+        }
+
+        .footer {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        .custom-prize {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .prize-icon {
+            font-size: 40px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .prize-emoji {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .scratch-demo-area {
+                gap: 20px;
+            }
+
+            .card-container {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            button {
+                width: 100%;
+                max-width: 250px;
+            }
+
+            .result-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @keyframes celebrate {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .celebrate {
+            animation: celebrate 0.5s ease-in-out 3;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="container">
+            <h1>Vue3 H5 刮刮乐插件</h1>
+            <p class="subtitle">移动端和桌面端均可使用的刮刮卡组件，支持自定义奖品、涂层和交互效果</p>
+
+            <div class="scratch-demo-area">
+                <!-- 刮刮卡1：基本样式 -->
+                <div class="card-container">
+                    <div class="card-title">一等奖：iPhone 15</div>
+                    <scratch-card ref="scratch1" :width="280" :height="140" cover-color="#7f8c8d" prize-text="iPhone 15"
+                        prize-desc="最新款苹果手机" :show-percentage="true" @complete="onCardComplete(1)"></scratch-card>
+                </div>
+
+                <!-- 刮刮卡2：自定义奖品 -->
+                <div class="card-container">
+                    <div class="card-title">二等奖：优惠券礼包</div>
+                    <scratch-card ref="scratch2" :width="280" :height="140" cover-color="#f39c12" :radius="18"
+                        :threshold="65">
+                        <template #prize>
+                            <div class="custom-prize">
+                                <div class="prize-emoji">🎁</div>
+                                <div class="prize-main">500元优惠券</div>
+                                <div class="prize-desc">全场通用，无门槛</div>
+                            </div>
+                        </template>
+                    </scratch-card>
+                </div>
+
+                <!-- 刮刮卡3：谢谢参与 -->
+                <div class="card-container">
+                    <div class="card-title">幸运奖：谢谢参与</div>
+                    <scratch-card ref="scratch3" :width="280" :height="140" cover-color="#3498db" prize-text="谢谢参与"
+                        prize-desc="下次好运！" @complete="onCardComplete(3)"></scratch-card>
+                </div>
+            </div>
+
+            <div class="controls">
+                <h2>控制面板</h2>
+                <div class="button-group">
+                    <button class="btn-reset" @click="resetAllCards">重置所有刮刮卡</button>
+                    <button class="btn-check" @click="checkAllProgress">查看刮开进度</button>
+                    <button class="btn-info" @click="showInstructions = !showInstructions">
+                        {{ showInstructions ? '隐藏说明' : '显示说明' }}
+                    </button>
+                </div>
+            </div>
+
+            <div class="result-area">
+                <h2>刮卡结果</h2>
+                <div class="result-list">
+                    <div class="result-item" v-for="(result, index) in cardResults" :key="index">
+                        <div class="result-title">{{ result.title }}</div>
+                        <div class="result-value">{{ result.value }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="instructions" v-if="showInstructions">
+                <h2>使用说明</h2>
+                <p><strong>桌面端：</strong>使用鼠标在涂层上拖动即可刮开</p>
+                <p><strong>移动端：</strong>使用手指在涂层上滑动即可刮开</p>
+                <ul>
+                    <li>每张刮刮卡刮开70%以上视为完全刮开</li>
+                    <li>完全刮开后会有庆祝动画和提示</li>
+                    <li>可以自定义奖品内容、涂层颜色和刮卡灵敏度</li>
+                    <li>支持自定义奖品插槽，可以放入任意HTML内容</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            Vue3 H5 刮刮乐插件 - 直接复制此HTML文件即可使用
+        </div>
+    </div>
+
+    <script>
+        const { createApp, ref, onMounted, computed, watch } = Vue;
+
+        // 刮刮卡组件
+        const ScratchCard = {
+            template: `
+                <div class="scratch-container">
+                    <!-- 底层：奖品展示 -->
+                    <div class="prize-content" :style="prizeStyle">
+                        <slot name="prize">
+                            <div class="default-prize" :class="{ 'celebrate': isComplete }">
+                                <div class="prize-main">{{ prizeText }}</div>
+                                <div class="prize-desc" v-if="prizeDesc">{{ prizeDesc }}</div>
+                            </div>
+                        </slot>
+                    </div>
+                    
+                    <!-- 顶层：涂层 -->
+                    <canvas
+                        ref="canvasRef"
+                        class="scratch-canvas"
+                        :width="width"
+                        :height="height"
+                        @mousedown="handleMouseDown"
+                        @mousemove="handleMouseMove"
+                        @mouseup="handleMouseUp"
+                        @mouseleave="handleMouseUp"
+                        @touchstart="handleTouchStart"
+                        @touchmove="handleTouchMove"
+                        @touchend="handleTouchEnd"
+                    ></canvas>
+                    
+                    <!-- 刮开比例提示 -->
+                    <div v-if="showPercentage" class="percentage">
+                        已刮开: {{ percentage }}%
+                    </div>
+                </div>
+            `,
+            props: {
+                // 画布宽度
+                width: {
+                    type: Number,
+                    default: 300
+                },
+                // 画布高度
+                height: {
+                    type: Number,
+                    default: 150
+                },
+                // 涂层颜色
+                coverColor: {
+                    type: String,
+                    default: '#999'
+                },
+                // 刮开半径
+                radius: {
+                    type: Number,
+                    default: 15
+                },
+                // 刮开比例阈值（达到该比例视为全部刮开）
+                threshold: {
+                    type: Number,
+                    default: 70
+                },
+                // 奖品文字
+                prizeText: {
+                    type: String,
+                    default: '恭喜中奖！'
+                },
+                // 奖品描述
+                prizeDesc: {
+                    type: String,
+                    default: ''
+                },
+                // 是否显示刮开百分比
+                showPercentage: {
+                    type: Boolean,
+                    default: false
+                }
+            },
+            emits: ['scratch-start', 'scratch-end', 'complete'],
+            setup(props, { emit }) {
+                // Refs
+                const canvasRef = ref(null);
+                const ctx = ref(null);
+                const isDrawing = ref(false);
+                const lastPoint = ref({ x: 0, y: 0 });
+                const percentage = ref(0);
+                const isComplete = ref(false);
+
+                // 计算奖品区域样式
+                const prizeStyle = computed(() => ({
+                    width: `${props.width}px`,
+                    height: `${props.height}px`,
+                    lineHeight: `${props.height}px`,
+                    background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)'
+                }));
+
+                // 初始化画布
+                const initCanvas = () => {
+                    if (!canvasRef.value) return;
+
+                    const canvas = canvasRef.value;
+                    ctx.value = canvas.getContext('2d');
+
+                    // 绘制涂层
+                    drawCover();
+                };
+
+                // 绘制涂层
+                const drawCover = () => {
+                    if (!ctx.value) return;
+
+                    const { width, height, coverColor } = props;
+
+                    // 创建渐变背景
+                    const gradient = ctx.value.createLinearGradient(0, 0, width, height);
+                    gradient.addColorStop(0, coverColor);
+                    gradient.addColorStop(1, adjustColor(coverColor, -20));
+
+                    ctx.value.fillStyle = gradient;
+                    ctx.value.fillRect(0, 0, width, height);
+
+                    // 添加一些文字提示
+                    ctx.value.fillStyle = '#fff';
+                    ctx.value.font = 'bold 18px Arial';
+                    ctx.value.textAlign = 'center';
+                    ctx.value.fillText('刮开涂层', width / 2, height / 2 - 10);
+
+                    ctx.value.font = '14px Arial';
+                    ctx.value.fillText('查看奖品', width / 2, height / 2 + 15);
+
+                    // 绘制网格线
+                    ctx.value.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+                    ctx.value.lineWidth = 1;
+
+                    // 垂直线
+                    for (let x = 0; x < width; x += 20) {
+                        ctx.value.beginPath();
+                        ctx.value.moveTo(x, 0);
+                        ctx.value.lineTo(x, height);
+                        ctx.value.stroke();
+                    }
+
+                    // 水平线
+                    for (let y = 0; y < height; y += 20) {
+                        ctx.value.beginPath();
+                        ctx.value.moveTo(0, y);
+                        ctx.value.lineTo(width, y);
+                        ctx.value.stroke();
+                    }
+                };
+
+                // 调整颜色亮度
+                const adjustColor = (color, amount) => {
+                    // 简化处理，实际应该解析颜色值
+                    return color;
+                };
+
+                // 获取画布上的坐标
+                const getCanvasPoint = (clientX, clientY) => {
+                    const canvas = canvasRef.value;
+                    const rect = canvas.getBoundingClientRect();
+                    return {
+                        x: clientX - rect.left,
+                        y: clientY - rect.top
+                    };
+                };
+
+                // 鼠标事件处理
+                const handleMouseDown = (e) => {
+                    isDrawing.value = true;
+                    const point = getCanvasPoint(e.clientX, e.clientY);
+                    lastPoint.value = point;
+                    emit('scratch-start', point);
+                };
+
+                const handleMouseMove = (e) => {
+                    if (!isDrawing.value || !ctx.value) return;
+
+                    const point = getCanvasPoint(e.clientX, e.clientY);
+                    drawScratch(point);
+                    lastPoint.value = point;
+
+                    // 计算刮开比例
+                    calculatePercentage();
+                };
+
+                const handleMouseUp = () => {
+                    if (isDrawing.value) {
+                        isDrawing.value = false;
+                        emit('scratch-end', { percentage: percentage.value });
+                    }
+                };
+
+                // 触摸事件处理（移动端）
+                const handleTouchStart = (e) => {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    isDrawing.value = true;
+                    const point = getCanvasPoint(touch.clientX, touch.clientY);
+                    lastPoint.value = point;
+                    emit('scratch-start', point);
+                };
+
+                const handleTouchMove = (e) => {
+                    e.preventDefault();
+                    if (!isDrawing.value || !ctx.value) return;
+
+                    const touch = e.touches[0];
+                    const point = getCanvasPoint(touch.clientX, touch.clientY);
+                    drawScratch(point);
+                    lastPoint.value = point;
+
+                    calculatePercentage();
+                };
+
+                const handleTouchEnd = () => {
+                    if (isDrawing.value) {
+                        isDrawing.value = false;
+                        emit('scratch-end', { percentage: percentage.value });
+                    }
+                };
+
+                // 绘制刮开效果
+                const drawScratch = (point) => {
+                    // 使用 destination-out 模式擦除
+                    ctx.value.globalCompositeOperation = 'destination-out';
+                    ctx.value.beginPath();
+                    ctx.value.arc(point.x, point.y, props.radius, 0, Math.PI * 2);
+                    ctx.value.fill();
+
+                    // 恢复默认合成模式
+                    ctx.value.globalCompositeOperation = 'source-over';
+                };
+
+                // 计算刮开比例
+                const calculatePercentage = () => {
+                    if (!canvasRef.value || !ctx.value) return;
+
+                    const canvas = canvasRef.value;
+                    const imageData = ctx.value.getImageData(0, 0, props.width, props.height);
+                    const pixels = imageData.data;
+                    let transparentCount = 0;
+
+                    // 计算透明像素数量
+                    for (let i = 3; i < pixels.length; i += 4) {
+                        if (pixels[i] === 0) {
+                            transparentCount++;
+                        }
+                    }
+
+                    const totalPixels = props.width * props.height;
+                    const newPercentage = Math.round((transparentCount / totalPixels) * 100);
+
+                    if (newPercentage !== percentage.value) {
+                        percentage.value = newPercentage;
+
+                        // 达到阈值，触发完成事件
+                        if (newPercentage >= props.threshold && !isComplete.value) {
+                            isComplete.value = true;
+                            emit('complete', { percentage: newPercentage });
+
+                            // 自动清除剩余涂层
+                            setTimeout(() => {
+                                ctx.value.clearRect(0, 0, props.width, props.height);
+                                percentage.value = 100;
+                            }, 500);
+                        }
+                    }
+                };
+
+                // 重置刮刮乐
+                const resetScratch = () => {
+                    percentage.value = 0;
+                    isComplete.value = false;
+                    drawCover();
+                };
+
+                // 获取刮开比例
+                const getPercentage = () => percentage.value;
+
+                // 生命周期
+                onMounted(() => {
+                    initCanvas();
+                });
+
+                // 暴露方法给父组件
+                return {
+                    canvasRef,
+                    ctx,
+                    isDrawing,
+                    lastPoint,
+                    percentage,
+                    isComplete,
+                    prizeStyle,
+                    initCanvas,
+                    drawCover,
+                    getCanvasPoint,
+                    handleMouseDown,
+                    handleMouseMove,
+                    handleMouseUp,
+                    handleTouchStart,
+                    handleTouchMove,
+                    handleTouchEnd,
+                    drawScratch,
+                    calculatePercentage,
+                    resetScratch,
+                    getPercentage
+                };
+            }
+        };
+
+        // 创建Vue应用
+        const app = createApp({
+            components: {
+                'scratch-card': ScratchCard
+            },
+            setup() {
+                // 组件引用
+                const scratch1 = ref(null);
+                const scratch2 = ref(null);
+                const scratch3 = ref(null);
+
+                // 状态
+                const showInstructions = ref(true);
+                const cardResults = ref([
+                    { title: '刮刮卡1: iPhone 15', value: '等待刮开' },
+                    { title: '刮刮卡2: 优惠券礼包', value: '等待刮开' },
+                    { title: '刮刮卡3: 谢谢参与', value: '等待刮开' }
+                ]);
+
+                // 刮刮卡完成回调
+                const onCardComplete = (cardNumber) => {
+                    const prizeNames = ['iPhone 15', '优惠券礼包', '谢谢参与'];
+                    const resultIndex = cardNumber - 1;
+
+                    cardResults.value[resultIndex].value = '已刮开100% - 恭喜！';
+
+                    // 显示庆祝消息
+                    setTimeout(() => {
+                        alert(`恭喜！您已完全刮开刮刮卡${cardNumber} (${prizeNames[resultIndex]})`);
+                    }, 300);
+                };
+
+                // 重置所有刮刮卡
+                const resetAllCards = () => {
+                    [scratch1, scratch2, scratch3].forEach(ref => {
+                        if (ref.value && ref.value.resetScratch) {
+                            ref.value.resetScratch();
+                        }
+                    });
+
+                    // 重置结果显示
+                    cardResults.value = [
+                        { title: '刮刮卡1: iPhone 15', value: '等待刮开' },
+                        { title: '刮刮卡2: 优惠券礼包', value: '等待刮开' },
+                        { title: '刮刮卡3: 谢谢参与', value: '等待刮开' }
+                    ];
+
+                    alert('所有刮刮卡已重置！');
+                };
+
+                // 查看所有刮刮卡进度
+                const checkAllProgress = () => {
+                    const cards = [scratch1, scratch2, scratch3];
+                    const prizeNames = ['iPhone 15', '优惠券礼包', '谢谢参与'];
+
+                    let message = '刮刮卡进度:\n';
+
+                    cards.forEach((ref, index) => {
+                        if (ref.value && ref.value.getPercentage) {
+                            const percent = ref.value.getPercentage();
+                            message += `${index + 1}. ${prizeNames[index]}: ${percent}%\n`;
+
+                            // 更新结果显示
+                            if (percent === 0) {
+                                cardResults.value[index].value = '等待刮开';
+                            } else if (percent < 70) {
+                                cardResults.value[index].value = `已刮开${percent}%`;
+                            } else {
+                                cardResults.value[index].value = `已刮开${percent}% - 完成`;
+                            }
+                        }
+                    });
+
+                    alert(message);
+                };
+
+                return {
+                    scratch1,
+                    scratch2,
+                    scratch3,
+                    showInstructions,
+                    cardResults,
+                    onCardComplete,
+                    resetAllCards,
+                    checkAllProgress
+                };
+            }
+        });
+
+        // 挂载应用
+        app.mount('#app');
+    </script>
+</body>
+</html>
