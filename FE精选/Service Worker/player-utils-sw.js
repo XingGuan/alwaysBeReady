@@ -115,9 +115,9 @@ function cloneRequestForXHR(originalRequest) {
 
         // 创建新的Request对象，包含新的请求头  
         const newRequest = new Request(originalRequest, {
-            headers: headers, //  使用新的headers  
+            headers: headers, //  使用新的headers，完全替换，不是合并（除非手动合并）  
             mode: 'cors', // 明确指定为CORS模式  
-            credentials: 'omit' // 不发送凭证信息  
+            credentials: 'omit' // 不发送凭证信息  omit 是省略的意思
         })
 
         // 调试日志  
@@ -192,6 +192,52 @@ function createRequestForMedia(originalRequest) {
         // 保持原始请求的其他属性
     })
 }
+
+// 为Media请求处理 - 使用URL参数方式
+// function createRequestForMedia(originalRequest) {
+//     try {
+//         console.log('处理Media请求，使用Media专用请求头');
+//         const originalUrl = originalRequest.url; // 获取原始URL  
+//         console.log('原始URL：', originalUrl);
+
+//         const params = new URLSearchParams(); // 创建URL参数对象  
+//         // 将mediaHeaders 转为 URL参数  
+//         Object.entries(mediaHeaders).forEach(([key, value]) => {
+//             if (value !== undefined && value !== null) {
+//                 params.append(key, String(value));// 添加参数
+//                 console.log(`添加Media请求头参数：${key}=${value}`);
+//             }
+//         })
+//         const urlObj = new URL(originalUrl);// 解析原始URL  
+//         const newParams = new URLSearchParams(urlObj.search);// 获取原始URL的查询参数  
+//         // 将新的参数合并到原始参数中  
+//         params.forEach((value, key) => {
+//             newParams.append(key, value);
+//         })
+//         urlObj.search = newParams.toString();// 更新URL的查询字符串  
+//         const newUrl = urlObj.toString(); // 生成新的URL  
+//         console.log('新URL：', newUrl);
+//         // 创建新的Request对象，使用新的URL  
+//         const newRequest = new Request(newUrl, {
+//             method: originalRequest.method, // 保持原始方法
+//             headers: originalRequest.headers,// 保持原始headers
+//             mode: originalRequest.mode,// 保持原始mode
+//             credentials: originalRequest.credentials,//保持原始credentials
+//             cache: originalRequest.cache,// 保持原始缓存策略
+//             redirect: originalRequest.redirect,//保持原始重定向策略  
+//             referrer: originalRequest.referrer,// 保持原始referrer策略      
+//             integrity: originalRequest.integrity // 保持原始完整性检查
+//         });
+//         // 调试日志  
+//         console.log('Media新请求的URL：', newRequest.url);
+//         console.log('Media新请求的mode：', newRequest.mode);
+//         console.log('Media新请求的destination:', newRequest.destination);
+//         return newRequest; // 返回新的请求对象
+//     } catch (error) {
+//         console.error('创建Media请求失败：', error);
+//         return originalRequest; // 出错时返回原始请求
+//     }
+// }
 
 // 等待请求头准备就绪   
 async function waitForHeadersReady() {
