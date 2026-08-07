@@ -9,15 +9,160 @@
 
 ---
 
-## 二、为什么需要 ESM？
+## 二、为什么需要 ESM？（历史方案）
 
-在`ESM`出现之前，`JavaScript`没有原生的模块系统，所有代码共享一个全局作用域，容易造成变量冲突和依赖管理混乱。为了解决这些问题，社区先后发明了多种模块化方案，例如：
+在`ESM`出现之前，`JavaScript`没有原生的模块系统，所有代码共享一个全局作用域，容易造成变量冲突和依赖管理混乱。为了解决这些问题，社区先后发明了多种模块化方案。其中最具代表性的就是 **CommonJS** 和 **AMD**，它们分别统治了服务端和浏览器端，但也都存在各自的局限性。
 
-+ `CommonJS（CJS）`：主要用于`Node.js`后端环境，使用`require`和`module.exports`。
-+ `AMD（Asynchronous Module Definition）`：主要用于浏览器端，支持异步加载。
-+ `UMD（Universal Modules Definition）`：一种兼容方案，试图让同一份代码能在多种环境中运行。
+### 1. CommonJS（CJS）—— 服务端模块化的绝对主力
 
-这些方案虽然解决了问题，但并非语言原生标准。直到`ES2015（ES6）`标准发布，`ESM`才作为官方模块系统被正式引入。
+CommonJS 是 Node.js 环境采用的默认模块规范，它主要面向服务端开发。
+
+- **核心语法**：使用 `require()` 导入，使用 `module.exports` 或 `exports` 导出。
+- **加载机制**：**同步加载**。由于 Node.js 运行在服务器端，模块文件就在本地硬盘上，读取速度非常快（毫秒级），同步加载不会成为性能瓶颈。
+- **关键特性**：**运行时加载**。`require()` 本质上是一个函数调用，你甚至可以把它写在 `if` 条件语句里，只有在代码执行到这一行时才会去加载模块。
+- **缓存机制**：`require()` 会缓存已加载的模块，多次导入同一个模块只会执行一次，后续直接从缓存中获取。
+- **局限性**：正因为它是运行时动态加载，打包工具（如 Webpack）无法在编译时静态分析出哪些代码被使用了，导致无法进行 `Tree Shaking`（摇树优化）。此外，它天生不适合浏览器（因为浏览器加载 JS 文件需要网络请求，同步加载会卡死页面渲染）。
+
+```javascript
+// -------- 导出 (module.js) --------
+const name = 'Alice';
+const age = 25;
+module.exports = { name, age };
+
+// 或者逐个导出
+exports.sayHi = function() { console.log('Hi'); };
+
+// -------- 导入 (app.js) --------
+const module = require('./module.js');
+console.log(module.name); // 'Alice'
+
+// 支持条件加载（运行时动态决定）
+if (process.env.NODE_ENV === 'development') {
+  const devTool = require('./dev-tool.js');
+  devTool.init();
+}
+```
+
+---
+
+### 2. AMD（Asynchronous Module Definition）—— 浏览器端的异步先驱
+
+在 ESM 出现之前，浏览器端缺乏模块化标准，且必须解决网络请求的延迟问题，AMD 因此诞生。
+
+- **核心语法**：使用 `define()` 定义模块，使用 `require()` 异步导入（通常配合回调函数）。
+- **加载机制**：**异步加载**。AMD 专门为浏览器设计，模块加载不会阻塞后续 HTML 的渲染和 JS 的执行，所有依赖加载完毕后自动执行回调函数。
+- **代表实现**：RequireJS 是 AMD 最著名的实现库，让浏览器端模块化开发成为可能。
+- **关键特性**：**依赖前置**。AMD 推崇在定义模块时就提前声明好所有依赖，框架会并行去下载这些依赖文件，充分利用浏览器的并发请求能力。
+- **局限性**：写法容易产生“回调地狱”，代码可读性较差，且需要额外配置（路径、别名等）。本质上仍是社区方案而非官方标准，最终被 ESM 取代。
+
+```javascript
+// -------- 定义模块 (math.js) --------
+// 如果无依赖，第一个参数为空数组
+define([], function() {
+  return {
+    add: function(a, b) { return a + b; },
+    multiply: function(a, b) { return a * b; }
+  };
+});
+
+// -------- 定义依赖其他模块的模块 (main.js) --------
+define(['math'], function(math) {
+  return {
+    calculate: function(x, y) {
+      return math.add(x, y);
+    }
+  };
+});
+
+// -------- 导入使用（入口处） --------
+require(['main'], function(main) {
+  console.log(main.calculate(2, 3)); // 5
+  // 回调函数确保 main 及其依赖全部加载完毕后才会执行
+});
+```
+
+---
+
+### 3. UMD（Universal Modules Definition）—— 跨环境的“万能胶水”
+
+如果说 CJS 是“Node.js 专用语”，AMD 是“浏览器专用语”，那么 UMD 就是一套 **“见人说人话，见鬼说鬼话”** 的兼容模板。它本身不发明新的模块语法，而是通过一段巧妙的代码，**检测当前环境到底支持哪种模块标准，然后用对应的方式去暴露模块**。
+
+- **核心设计思路**：使用 **IIFE（立即执行函数）** + **环境判断（Feature Detection）**。
+- **判断逻辑（优先级从高到低）**：
+  1. **检测是否支持 AMD**（`typeof define === 'function' && define.amd`）→ 如果是，用 AMD 的 `define()` 注册模块。
+  2. **检测是否支持 CommonJS**（`typeof module === 'object' && module.exports`）→ 如果是，把模块赋值给 `module.exports`。
+  3. **以上都不支持（纯浏览器 Script 标签）** → 直接挂载到全局对象 `window` 或 `global` 上（通过 `this` 指向）。
+- **关键特性**：**运行时适配**。所有判断逻辑都发生在代码运行的瞬间，不需要用户干预，库文件“自适应”运行环境。
+- **主要用途**：**第三方库（尤其是老牌库）的打包出口**。比如 `Lodash`、`Moment.js`、`jQuery` 在发布到 `npm` 时，通常会提供一个 UMD 格式的入口文件，确保开发者无论用 `require`、`define` 还是 `<script>` 标签引入，都能正常使用。
+- **局限性（为何最终被淘汰）**：
+  - **代码体积臃肿**：为了兼容三种环境，UMD 模板需要写大量冗余的 `if` 判断和 IIFE 包装代码。
+  - **依然不是原生标准**：它只是“兼容方案”的集大成者，并未解决模块化语言层面的根本问题。
+  - **依然不支持 Tree Shaking**：因为依赖是运行时动态判断的，打包工具无法在编译时静态分析，导致引入 UMD 包时往往会打进去一堆无用代码。
+
+```javascript
+// ---------- 一个标准 UMD 模块模板（经典写法） ----------
+// 这是一个立即执行函数，把模块逻辑封装在里面
+(function (root, factory) {
+    // 第 1 步：检测是否支持 AMD（如 RequireJS 环境）
+    if (typeof define === 'function' && define.amd) {
+        // ✅ 是 AMD 环境：使用 define 定义模块
+        define(['jquery'], factory); // 假设依赖 jquery
+    }
+    // 第 2 步：检测是否支持 CommonJS（Node.js 环境）
+    else if (typeof module === 'object' && module.exports) {
+        // ✅ 是 CommonJS 环境：挂载到 module.exports 上
+        // 注意：Node 中需要用 require 拿依赖，这里简写示意
+        var jquery = require('jquery');
+        module.exports = factory(jquery);
+    }
+    // 第 3 步：以上都不满足（纯浏览器环境，用 <script> 标签引入）
+    else {
+        // ✅ 浏览器全局环境：直接挂载到 window 对象上
+        // 有的库会挂到 root['MyLib']，有的会挂到 root['_']（如 lodash）
+        root.MyLibrary = factory(root.jQuery);
+    }
+}(typeof self !== 'undefined' ? self : this, function ($) {
+    // -------- 这是你的真正的模块逻辑代码 --------
+    const myModule = {
+        version: '1.0.0',
+        sayHello: function (name) {
+            console.log('Hello, ' + name);
+            // 这里使用了外部依赖 $（比如 jQuery）
+            $('#app').text('Hello, ' + name);
+        }
+    };
+
+    // 把模块内容返回给上面检测到的环境
+    return myModule;
+}));
+
+// ---------- 如何消费它？三种方式任君选择 ----------
+// 1. 在浏览器中用 <script> 标签引入后，直接拿全局变量
+// <script src="my-library.umd.js"></script>
+// <script> MyLibrary.sayHello('Alice'); </script>
+
+// 2. 在 Node.js 中用 require
+const MyLibrary = require('./my-library.umd.js');
+MyLibrary.sayHello('Bob');
+
+// 3. 在 AMD 环境（如旧版 RequireJS）中
+require(['my-library'], function (MyLibrary) {
+    MyLibrary.sayHello('Charlie');
+});
+```
+
+> **UMD 的历史定位**：它是 ESM 普及前的“终极兼容方案”，让库作者只需一份代码就能覆盖几乎所有 JS 运行环境。但如今，随着 `Node.js` 和现代浏览器全面拥抱 ESM，**前端新项目已经很少直接编写或发布纯 UMD 包了**。现在主流的打包工具（如 Vite、Rollup）虽然还保留了“输出 UMD 格式”的选项，但主要是为了给那些还在用 `<script>` 标签的老项目提供便利。
+
+---
+
+### 4. 为什么它们最终让位给了 ESM？
+
+以上方案虽然都曾在各自领域大放异彩，但它们都有共同的致命伤：
+
+1. **并非语言原生标准**：CJS 需要 Node.js 环境支持，AMD 需要 RequireJS 等第三方库，都需要额外工具或特殊处理。
+2. **无法静态分析**：CJS 和 AMD 都是运行时确定依赖（动态加载），打包工具无法在编译时预判依赖关系，导致 `Tree Shaking` 失效、打包体积难以极致优化。
+
+正是这些痛点，催生了官方标准 **`ESM`** 的诞生。接下来我们就来详细看看，ESM 是如何从底层设计上解决了上述所有问题的。
 
 ---
 
