@@ -84,7 +84,88 @@
 
 > 当使用 `<component :is="...">`来在多个组件间作切换时，被切换掉的组件会被卸载。我们可以通过`<KeepAlive>`组件强制被切换掉的组件仍然保持"存活"的状态。
 
+#### `RouterView`  
+```javascript
+<router-view v-slot="{Component}">
+  <component :is="Component" />
+</router-view>
+```
++ 1.`<router-view />`本来在干什么  
+`<router-view>`是`Vue Router`提供的一个"占位组件"。  
+它会根据当前浏览器的地址(比如`/home`、`/about`),从路由配置里找到应该显示的**页面组件**，然后把它渲染出来。  
+通常我们直接写：  
+```vue
+<router-view />
+```  
+这样路由一变，里面显示的内容就自动切换成对应的页面组件。   
+2.加上`v-slot`以后发生了什么  
+你的写法是：  
+```javascript 
+<router-view v-slot="{ Component }">
+  <component :is="Component" />
+</router-view>
+```  
+这里`v-slot="{ Component }"` 表示：  
+让`<router-view>`把"**它准备渲染的那个组件对象**"通过一个叫`Component`的变量暴露出来。  
+也就是说：  
++ `<router-view>`内部知道自己这次要显示哪个组件（比如`Home.vue`或`About.vue`）。  
++ 它没有自己直接渲染，而是把**这个组件对象**作为插槽参数传给你。   
++ 你在插槽里拿到`Component`这个对象，然后用`<component :is="Component" />`手动动态渲染它。   
+3."`Component`是怎么传递进来的?什么时候传？"  
+传递方式：  
+`<router-view>`组件内部实现，在渲染时会计算出当前匹配的路由记录里对应的`component`选项（就是你定义路由时写的那个组件），然后通过作用域插槽的`props`传出来。   
+你看到的`Component`只是你自己起的变量名，实际接收的就是那个组件对象。  
+传递时机：  
++ 应用首次加载，路由初始化完成时。  
++ 每次路由导航到新路由、或者地址变化时，路由重新匹配，`<router-view>`会重新计算应该显示的组件，然后**重新触发插槽，把新的组件对象传进来**。  
++ 这个传递对你是透明的，只有路由一变，`Component`的值就会变，`<component :is="Component"/>`就会销毁旧组件、挂载新组件。   
+4.那为什么不直接写`<router-view/>`呢？   
+```javascript
+<router-view v-slot="{ Component }">
+  <transition :name="fade" mode="out-in">
+    <component :is="Component" />  
+  </transition>
+</router-view>
+```  
+这样一来，每次路由切换时，页面组件就会带着淡入淡出动画。  
+如果直接用`<router-view />`,它内部自己就渲染了，你没法在它外面包一层`<transition>`。  
 
+#### 总结一句话  
+`Component`不是你自己传的，是`<router-view>`根据当前地址匹配到的组件对象，通过作用域插槽自动暴露给你的。
+路由一变，它就会变，`<component :is="Component" />`就会渲染对应的页面。
+
+
+#### 按组件名缓存组件   
+因为`<keep-alive></keep-alive>`里面是按组件名缓存组件的。
+```javascript
+  <RouterView v-slot="{ Component }">
+    <keep-alive include="Home">
+      <component :is="Component" />
+    </keep-alive>
+  </RouterView>
+```  
+写页面或写组件时需要命名。   
+`Vue3.3+` 加了一个`defineOptions`来支持在`setup`模式下给组件命名。  
+```javascript
+<script setup>
+  defineOptions({
+    name:"Home"
+  })
+</script>
+```
+低于`3.3`是无法使用`defineOptions`来命名的   
+用`Vue2`来打补丁  
+`vue2`的标准写法就是：  
+```javascript
+<script>
+  export default{
+    name:'Home',
+    data(){……},
+    methods:{……}
+  }
+</script>
+```
+`Vue3`有了`<script setup>`后，老的`<script>>`(无`setup`)并没有被废弃，只是角色变了——它退化为**"只用来填`Options API`"**里`setup`管不到的字段"**,主要就是`name`和`inheritAttrs`。所以这个双`script`写法确实是老版本遗留用法，但成了`Vue3`里一个特殊的"补丁"用法。  
 
 
 
