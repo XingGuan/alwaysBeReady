@@ -5,7 +5,7 @@
 这种交互方式就叫`Webview JavascriptInterface`（或`Android Webview Bridge`）。  
 更准确地说，它是`Android`系统`WebView`原生提供的标准通信机制，整个链条里没有任何第三方介入。  
 
-+ `Android`:系统只额吉提供了`@JavascriptInterface`，**不需要任何库就能双向通信**，这就是标准做法。   
++ `Android`:系统只提供了`@JavascriptInterface`，**不需要任何库就能双向通信**，这就是标准做法。   
 + `IOS`:系统没有对等的API(`JavaScriptCore`不能直接注入到`UIWebView`的`JS`上下文中)，所以才需要第三方库`WebViewJavascriptBridge`  
 
 当前方式就是**`Android`官方推荐的正统方式**，就像`document.getElementById`不需要一个专用名字一样——这就是`Android WebView`本身的功能，不是某个框架或模式。   

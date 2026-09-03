@@ -10,7 +10,7 @@
 | 结果          | 系统自带，零依赖           | 需要第三方库补缺口            |
 
 #### 具体来说  
-`Android`的`WebView`是`Chrome`团队维护的，很早就设计了`addJavascriptInterface``API`——意思就是「你要把`Java`对象暴露给`JS`?系统直接帮你做」。   
+`Android`的`WebView`是`Chrome`团队维护的，很早就设计了`addJavascriptInterface API`——意思就是「你要把`Java`对象暴露给`JS`?系统直接帮你做」。   
 `IOS`的`WKWebView`从一开始就没有这样一个直接的绑定`API`。它的`WKUserContentController`虽然能处理`JS`消息，但：  
 // `ios WKWebView`只能这样：`JS`发消息给`Native`  
 // `ios`侧注册一个`handler`，`JS`通过`postMessage`触发  
@@ -32,8 +32,10 @@
 这种方法算什么？就是所说的那种`window`注入的方式吗？  
 > "`window`注入" 就是这个意思，不过更准确的叫法是**JS对象注入或`Java`对象绑定**。  
 
-不同的叫法  
+不同的叫法   
+
 |叫法|是否准确|说明|
+|---|------|---|
 |`window注入`|通俗说法|注入后确实挂在`window.bestvPlus`上|
 |`JS`对象注入|准确|把`Java`对象注入到`JS`执行环境|
 |`Java`对象绑定|官方术语|`addJavascriptInterface`的官方叫法就是"`Binding JavaScript code to Android code`"|
